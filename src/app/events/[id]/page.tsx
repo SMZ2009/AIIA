@@ -8,6 +8,8 @@ import type { Metadata } from 'next'
 
 interface Props { params: { id: string } }
 
+export const dynamic = 'force-dynamic'
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const event = await prisma.event.findUnique({ where: { id: params.id } })
   if (!event) return { title: '活动未找到' }

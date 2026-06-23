@@ -4,6 +4,7 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { Newspaper } from 'lucide-react'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: '新闻' }
 
 export default async function NewsPage() {

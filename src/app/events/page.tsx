@@ -4,6 +4,7 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { Calendar } from 'lucide-react'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: '活动' }
 
 export default async function EventsPage() {

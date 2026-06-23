@@ -6,6 +6,8 @@ import { Calendar, Newspaper, Handshake } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
 
+export const dynamic = 'force-dynamic'
+
 const PARTNER_CATS = [
   { key: 'ENTERPRISE', label: '企业伙伴' },
   { key: 'UNIVERSITY', label: '高校伙伴' },
@@ -70,8 +72,8 @@ export default async function HomePage() {
               if (items.length === 0) return null
               const accent = cat.key === 'ENTERPRISE' ? 'text-blue-300' : cat.key === 'UNIVERSITY' ? 'text-amber-300' : 'text-emerald-300'
               return (
-                <div key={cat.key} className="flex items-center gap-4">
-                  <span className={`text-[11px] font-medium shrink-0 ${accent}`}>{cat.label}</span>
+                <div key={cat.key} className="flex items-start gap-4">
+                  <span className={`text-[11px] font-medium shrink-0 mt-1.5 ${accent}`}>{cat.label}</span>
                   <div className="flex items-center gap-3 flex-wrap">
                     {items.map((p) => (
                       <div key={p.id} className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.05] transition-colors">

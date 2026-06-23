@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: aiia
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npx prisma db push && npm start
+    envVars:
+      - key: DATABASE_URL
+        value: file:./prisma/dev.db
+      - key: SESSION_SECRET
+        generateValue: true
+    disk:
+      name: sqlite
+      mountPath: /opt/render/project/src/prisma
+      sizeGB: 1
