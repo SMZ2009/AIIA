@@ -18,11 +18,6 @@ export function HeroBanner() {
 
       <div className="relative max-w-6xl mx-auto px-5 py-16 md:py-28">
         <div className="max-w-3xl mx-auto text-center">
-          {/* 徽章 */}
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 text-white/70 text-xs mb-6">
-            <Sparkles className="w-3.5 h-3.5 text-brand-300" />
-            创新 · 协作 · 成长
-          </div>
 
           {/* 主标题 - 手机端缩小 */}
           <h1 className="text-[28px] leading-tight md:text-5xl md:leading-tight font-extrabold text-white tracking-tight">
@@ -57,9 +52,9 @@ export function HeroBanner() {
           {/* 数据指标 - 手机端缩小 */}
           <div className="mt-12 grid grid-cols-3 gap-4 max-w-[300px] mx-auto">
             {[
-              { icon: BookOpen, label: '活动', value: '12+' },
-              { icon: Users, label: '成员', value: '50+' },
-              { icon: Calendar, label: '成立', value: '2023' },
+              { icon: BookOpen, label: '活动', value: '3+' },
+              { icon: Users, label: '成员', value: '80+' },
+              { icon: Calendar, label: '成立', value: '2026' },
             ].map((item, i) => (
               <div key={i} className="text-center">
                 <div className="flex items-center justify-center gap-1 text-white/40 mb-1">

@@ -45,8 +45,9 @@ export function FuturisticHero() {
 
         {/* 标签 */}
         <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] backdrop-blur-sm border border-white/[0.08] mb-6">
+          <span className="text-[11px] text-slate-400 tracking-widest uppercase"> ai Innovate   </span>
           <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="text-[11px] text-slate-400 tracking-widest uppercase">Innovate · Collaborate · Grow</span>
+          <span className="text-[11px] text-slate-400 tracking-widest uppercase"> Accelerate</span>
         </div>
 
         {/* 主标题 */}
@@ -57,10 +58,10 @@ export function FuturisticHero() {
         {/* 打字机副标题 */}
         <div className="text-xl md:text-2xl font-extrabold mb-4 h-9">
           <TypewriterText
-            texts={['用技术连接未来', 'AI 驱动的创新社区', 'Build the Future']}
+            texts={['AI 驱动的创新社区', 'AI-Driven Inno Community', 'Build the Future']}
             className="bg-gradient-to-r from-cyan-300 via-indigo-300 to-purple-300 bg-clip-text text-transparent"
             speed={100}
-            pause={3000}
+            pause={2000}
           />
         </div>
 
@@ -86,9 +87,9 @@ export function FuturisticHero() {
         {/* 数据指标 */}
         <div className="grid grid-cols-3 gap-6 max-w-[280px] mx-auto">
           {[
-            { label: '活动举办', value: 12, suffix: '+' },
-            { label: '社区成员', value: 50, suffix: '+' },
-            { label: '合作组织', value: 4, suffix: '+' },
+            { label: '活动举办', value: 3, suffix: '+' },
+            { label: '社区成员', value: 80, suffix: '+' },
+            { label: '合作组织', value: 12, suffix: '+' },
           ].map((item) => (
             <div key={item.label} className="text-center">
               <AnimatedCounter end={item.value} suffix={item.suffix} className="text-2xl font-black text-white block" />

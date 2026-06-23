@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getAdminSession } from '@/lib/auth'
-import { slugify } from '@/lib/utils'
 
 export async function GET(
   req: NextRequest,
@@ -9,7 +8,7 @@ export async function GET(
 ) {
   const article = await prisma.article.findFirst({
     where: {
-      OR: [{ id: params.id }, { slug: params.id }],
+      id: params.id,
       status: 'published',
     },
   })
@@ -32,15 +31,19 @@ export async function PUT(
   const updateData: any = {}
 
   if (data.title !== undefined) updateData.title = data.title
-  if (data.slug !== undefined) updateData.slug = data.slug || slugify(data.title)
   if (data.summary !== undefined) updateData.summary = data.summary
-  if (data.content !== undefined) updateData.content = data.content
+  if (data.link !== undefined) updateData.link = data.link
   if (data.coverImage !== undefined) updateData.coverImage = data.coverImage
-  if (data.author !== undefined) updateData.author = data.author
+  if (data.publishedAt !== undefined) {
+    updateData.publishedAt = data.publishedAt ? new Date(data.publishedAt) : null
+  }
   if (data.status !== undefined) {
     updateData.status = data.status
     if (data.status === 'published' && !updateData.publishedAt) {
       updateData.publishedAt = new Date()
+    }
+    if (data.status !== 'published') {
+      updateData.publishedAt = null
     }
   }
 

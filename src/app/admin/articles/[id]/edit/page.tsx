@@ -19,16 +19,17 @@ export default async function EditArticlePage({ params }: Props) {
 
   return (
     <div>
-      <h1 className="text-xl font-bold text-gray-900 mb-6">编辑文章</h1>
-      <div className="bg-white rounded-2xl border border-gray-100 p-6">
+      <h1 className="text-xl font-bold text-white mb-6">编辑文章</h1>
+      <div className="bg-white/[0.03] backdrop-blur-xl border border-white/[0.06] rounded-2xl p-6">
         <ArticleForm
           defaultValues={{
             title: article.title,
-            slug: article.slug,
             summary: article.summary,
-            content: article.content,
+            link: article.link,
             coverImage: article.coverImage,
-            author: article.author,
+            publishedAt: article.publishedAt
+              ? new Date(article.publishedAt).toISOString().slice(0, 16)
+              : '',
             status: article.status,
           }}
           isEdit

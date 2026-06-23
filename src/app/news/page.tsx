@@ -25,7 +25,7 @@ export default async function NewsPage() {
 
       <div className="px-5 space-y-3">
         {articles.length > 0
-          ? articles.map((a) => <ArticleCard key={a.id} {...a} />)
+          ? articles.map((a) => <ArticleCard key={a.id} title={a.title} summary={a.summary} link={a.link} coverImage={a.coverImage} publishedAt={a.publishedAt} />)
           : <EmptyState icon={Newspaper} title="暂无新闻" />}
       </div>
     </div>

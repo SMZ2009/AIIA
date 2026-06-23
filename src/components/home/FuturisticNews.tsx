@@ -1,7 +1,5 @@
 import { prisma } from '@/lib/prisma'
 import { formatDate } from '@/lib/utils'
-import { ArrowRight } from 'lucide-react'
-import Link from 'next/link'
 
 export async function FuturisticNews() {
   const articles = await prisma.article.findMany({
@@ -15,26 +13,44 @@ export async function FuturisticNews() {
   return (
     <div className="space-y-3">
       {articles.map((article, i) => (
-        <Link key={article.id} href={`/news/${article.slug}`} className="block group">
-          <div
-            className="relative overflow-hidden rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.06] hover:border-white/[0.12] transition-all duration-500 p-4"
-            style={{ animationDelay: `${i * 0.1}s` }}
-          >
-            <div className="flex items-start gap-3">
-              <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-white/90 group-hover:text-white text-[14px] leading-snug transition-colors line-clamp-2">
-                  {article.title}
-                </h3>
-                <p className="text-xs text-slate-500 mt-1 line-clamp-2">{article.summary}</p>
-                <div className="flex items-center gap-2 mt-2.5">
-                  {article.author && <span className="text-[11px] text-slate-500">{article.author}</span>}
-                  {article.publishedAt && <span className="text-[11px] text-slate-600">· {formatDate(article.publishedAt, 'short')}</span>}
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-cyan-400 group-hover:translate-x-0.5 transition-all shrink-0 mt-1" />
+        <a
+          key={article.id}
+          href={article.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block group rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.10] hover:bg-white/[0.04] transition-all duration-500 overflow-hidden"
+          style={{ animationDelay: `${i * 0.1}s` }}
+        >
+          {article.coverImage && (
+            <div className="relative w-full aspect-[2/1] overflow-hidden">
+              <img
+                src={article.coverImage}
+                alt={article.title}
+                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.01]"
+                loading="lazy"
+              />
+              <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
             </div>
+          )}
+
+          <div className="px-5 pt-4 pb-5">
+            <div className="flex items-center gap-3 text-[11px] text-slate-500 mb-2.5 tracking-wide">
+              {article.publishedAt && (
+                <span>{formatDate(article.publishedAt, 'short')}</span>
+              )}
+              <span className="w-1 h-1 rounded-full bg-white/[0.15]" />
+              <span>微信公众号</span>
+            </div>
+
+            <h3 className="text-[15px] font-semibold text-white/95 group-hover:text-white leading-relaxed line-clamp-2 transition-colors duration-300">
+              {article.title}
+            </h3>
+
+            <p className="text-[13px] text-slate-500 leading-relaxed mt-1.5 line-clamp-2">
+              {article.summary}
+            </p>
           </div>
-        </Link>
+        </a>
       ))}
     </div>
   )

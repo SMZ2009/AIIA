@@ -49,15 +49,25 @@ model Registration {
   @@unique([eventId, studentId])
 }
 
-// ---------- 新闻/推文 ----------
+// ---------- 合作伙伴 ----------
+model Partner {
+  id        String   @id @default(cuid())
+  name      String
+  logoUrl   String   @default("")
+  link      String   @default("")
+  category  String   @default("COMMUNITY") // ENTERPRISE | UNIVERSITY | COMMUNITY
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------- 新闻/推文（公众号外链） ----------
 model Article {
   id          String    @id @default(cuid())
   title       String
-  slug        String    @unique
   summary     String
-  content     String    // Markdown 正文
-  coverImage  String    @default("")
-  author      String    @default("")
+  link        String    // 公众号文章链接
+  coverImage  String    @default("")  // 封面图片 URL，比例 2.35:1
   status      String    @default("draft") // draft | published
   publishedAt DateTime?
   createdAt   DateTime  @default(now())

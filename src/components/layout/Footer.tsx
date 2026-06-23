@@ -3,7 +3,6 @@ const footerLinks = [
   { label: '成员介绍', href: '/members' },
   { label: '活动', href: '/events' },
   { label: '新闻', href: '/news' },
-  { label: '合作伙伴', href: '/partners' },
 ]
 
 export function Footer() {

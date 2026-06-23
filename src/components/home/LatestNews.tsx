@@ -29,7 +29,7 @@ export async function LatestNews() {
         <div className="grid grid-cols-1 gap-3">
           {articles.map((article, i) => (
             <div key={article.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
-              <ArticleCard {...article} />
+              <ArticleCard title={article.title} summary={article.summary} link={article.link} coverImage={article.coverImage} publishedAt={article.publishedAt} />
             </div>
           ))}
         </div>

@@ -1,4 +1,4 @@
-import { Users, Handshake, Info, ChevronRight, Shield } from 'lucide-react'
+import { Users, Info, ChevronRight, Shield } from 'lucide-react'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
@@ -7,7 +7,6 @@ export const metadata: Metadata = { title: '更多' }
 const menuItems = [
   { icon: Info, label: '关于我们', href: '/about', color: 'text-indigo-400 bg-indigo-500/10' },
   { icon: Users, label: '成员介绍', href: '/members', color: 'text-cyan-400 bg-cyan-500/10' },
-  { icon: Handshake, label: '合作伙伴', href: '/partners', color: 'text-purple-400 bg-purple-500/10' },
   { icon: Shield, label: '后台管理', href: '/admin/login', color: 'text-slate-400 bg-white/[0.04]' },
 ]
 

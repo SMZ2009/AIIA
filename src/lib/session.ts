@@ -7,7 +7,7 @@ export interface SessionData {
 }
 
 export const sessionOptions: SessionOptions = {
-  password: process.env.SESSION_SECRET || 'dev-secret-change-in-production',
+  password: process.env.SESSION_SECRET || 'a-very-long-dev-secret-at-least-32-chars!!',
   cookieName: 'aiia-admin-session',
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production',

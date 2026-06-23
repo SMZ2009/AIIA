@@ -115,10 +115,10 @@ export default function EventForm({ defaultValues, isEdit, eventId }: EventFormP
         <Input label="报名截止" type="datetime-local" {...register('registrationDeadline')} />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1.5">状态</label>
+        <label className="block text-sm font-medium text-slate-300 mb-1.5">状态</label>
         <select
           {...register('status')}
-          className="w-full h-11 px-4 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+          className="w-full h-11 px-4 rounded-xl bg-white/[0.04] border border-white/[0.08] text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
         >
           <option value="draft">草稿</option>
           <option value="published">发布</option>

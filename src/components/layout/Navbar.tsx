@@ -12,7 +12,6 @@ const navLinks = [
   { href: '/members', label: '成员' },
   { href: '/events', label: '活动' },
   { href: '/news', label: '新闻' },
-  { href: '/partners', label: '合作' },
 ]
 
 export function Navbar() {

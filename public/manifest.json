@@ -1,0 +1,29 @@
+{
+  "name": "哈工大深圳人工智能创协",
+  "short_name": "HITSZ AIIA",
+  "description": "哈尔滨工业大学（深圳）人工智能创新协会",
+  "start_url": "/?standalone=true",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "fullscreen", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#060918",
+  "theme_color": "#060918",
+  "lang": "zh-CN",
+  "prefer_related_applications": false,
+  "categories": ["education", "social"],
+  "icons": [
+    {
+      "src": "/images/logoblack.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/logoblack.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

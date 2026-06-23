@@ -19,8 +19,8 @@ export default async function EditEventPage({ params }: Props) {
 
   return (
     <div>
-      <h1 className="text-xl font-bold text-gray-900 mb-6">编辑活动</h1>
-      <div className="bg-white rounded-2xl border border-gray-100 p-6">
+      <h1 className="text-xl font-bold text-white mb-6">编辑活动</h1>
+      <div className="bg-white/[0.03] backdrop-blur-xl border border-white/[0.06] rounded-2xl p-6">
         <EventForm
           defaultValues={{
             title: event.title,

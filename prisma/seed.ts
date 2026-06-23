@@ -64,36 +64,30 @@ async function main() {
   }
   console.log('✅ 创建 3 场示例活动')
 
-  // 3. 创建示例文章
+  // 3. 创建示例文章（公众号外链）
   const articles = [
     {
       title: '社团顺利完成换届选举',
-      slug: '2024-leadership-election',
       summary: '新一届社团管理团队正式上任，将带来全新的发展计划。',
-      content: `近日，我社举行了年度换届选举大会。经过候选人演讲、现场答辩和全体成员投票，新一届管理团队正式产生。\n\n## 新一届管理团队\n\n- **社长**：张三\n- **副社长**：李四\n- **技术部部长**：王五\n- **宣传部部长**：赵六\n- **外联部部长**：陈七\n- **活动部部长**：刘八\n\n## 未来展望\n\n新团队提出了"数字化 + 社区化"的发展方向，计划在本学年推出以下举措：\n\n1. 建设社团官方网站\n2. 建立成员积分与成长体系\n3. 每月开展技术分享活动\n4. 拓展校外合作组织网络\n\n让我们共同期待！`,
-      coverImage: '',
-      author: '社团宣传部',
-      status: 'published',
+      link: 'https://mp.weixin.qq.com/s/example-1',
+      coverImage: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=940&h=400&fit=crop',
+      status: 'published' as const,
       publishedAt: new Date('2024-09-01T10:00:00'),
     },
     {
       title: '回顾：春季校园文化节圆满落幕',
-      slug: '2024-spring-festival-recap',
       summary: '为期三天的校园文化节吸引了超过 500 名同学参与。',
-      content: `2024 年春季校园文化节于 5 月 20 日圆满落幕。本次活动以 "青春绽放" 为主题，涵盖文艺演出、创意市集、科技展览三大板块。\n\n## 精彩瞬间\n\n### 开幕式\n\n校长亲临现场致辞，鼓励同学们在课外活动中锻炼综合能力。\n\n### 创意市集\n\n30 个学生团队展示了手工艺品、数字绘画、自制美食等创意产品。\n\n### 科技展览\n\n我社展示了 AI 绘画、3D 打印和机器人编程等项目，吸引大批同学驻足体验。\n\n## 致谢\n\n感谢校团委、学生会以及各合作组织的大力支持。明年春天，我们再相聚！`,
-      coverImage: '',
-      author: '社团宣传部',
-      status: 'published',
+      link: 'https://mp.weixin.qq.com/s/example-2',
+      coverImage: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=940&h=400&fit=crop',
+      status: 'published' as const,
       publishedAt: new Date('2024-05-22T14:00:00'),
     },
     {
       title: '新生指南：如何平衡学业与社团生活',
-      slug: 'freshman-guide-balance',
       summary: '给大一新生的建议：在社团活动中成长，同时保持学业成绩。',
-      content: `大学生活丰富多彩，社团是重要的成长平台。但同时，学业也不能落下。以下是一些建议：\n\n## 1. 合理规划时间\n\n- 使用日历工具记录课程、作业和社团活动\n- 每周日晚上规划下周安排\n- 给重要任务预留缓冲时间\n\n## 2. 学会说"不"\n\n不是所有活动都要参加。选择对你真正有意义的事情投入时间。\n\n## 3. 利用碎片时间\n\n- 通勤时间听播客/看书\n- 等待时间处理短任务\n\n## 4. 团队协作\n\n社团工作不需要一个人扛。学会分工合作，发挥团队力量。\n\n## 5. 保持沟通\n\n如果学业压力大，及时和社团负责人沟通，大家都会理解。\n\n> 大学的意义在于探索与成长。社团是课堂之外的课堂，但不要让它成为负担。`,
-      coverImage: '',
-      author: '社长 张三',
-      status: 'published',
+      link: 'https://mp.weixin.qq.com/s/example-3',
+      coverImage: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=940&h=400&fit=crop',
+      status: 'published' as const,
       publishedAt: new Date('2024-08-15T09:00:00'),
     },
   ]
@@ -101,7 +95,23 @@ async function main() {
   for (const articleData of articles) {
     await prisma.article.create({ data: articleData })
   }
-  console.log('✅ 创建 3 篇示例文章')
+  console.log('✅ 创建 3 篇示例文章（公众号外链）')
+
+  // 4. 创建示例合作伙伴
+  const partners = [
+    { name: '华为技术有限公司', category: 'ENTERPRISE', sortOrder: 0 },
+    { name: '腾讯科技', category: 'ENTERPRISE', sortOrder: 1 },
+    { name: '深圳清华大学研究院', category: 'UNIVERSITY', sortOrder: 0 },
+    { name: '南方科技大学', category: 'UNIVERSITY', sortOrder: 1 },
+    { name: '校学生会', category: 'COMMUNITY', sortOrder: 0 },
+    { name: '青年志愿者协会', category: 'COMMUNITY', sortOrder: 1 },
+    { name: '计算机协会', category: 'COMMUNITY', sortOrder: 2 },
+    { name: '摄影社', category: 'COMMUNITY', sortOrder: 3 },
+  ]
+  for (const p of partners) {
+    await prisma.partner.create({ data: p })
+  }
+  console.log('✅ 创建 8 个示例合作伙伴')
 
   console.log('\n🎉 种子数据填充完成！')
 }

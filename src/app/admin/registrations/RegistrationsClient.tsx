@@ -60,7 +60,7 @@ export function RegistrationsClient({ registrations, events }: Props) {
         <select
           value={filterEventId}
           onChange={(e) => setFilterEventId(e.target.value)}
-          className="h-11 px-4 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+          className="h-11 px-4 rounded-xl bg-white/[0.04] border border-white/[0.08] text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
         >
           <option value="">全部活动</option>
           {events.map((e) => (
@@ -70,30 +70,35 @@ export function RegistrationsClient({ registrations, events }: Props) {
       </div>
 
       {/* 表格 */}
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      <div className="bg-white/[0.03] backdrop-blur-xl border border-white/[0.06] rounded-2xl overflow-hidden">
+        {/* 桌面表格 */}
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100">
-                <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs">姓名</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs">学号</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs">手机号</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs">活动</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs">报名时间</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-500 text-xs">状态</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-500 text-xs">操作</th>
+              <tr className="border-b border-white/[0.06]">
+                <th className="text-left py-3 px-4 font-medium text-slate-500 text-xs">姓名</th>
+                <th className="text-left py-3 px-4 font-medium text-slate-500 text-xs">学号</th>
+                <th className="text-left py-3 px-4 font-medium text-slate-500 text-xs">手机号</th>
+                <th className="text-left py-3 px-4 font-medium text-slate-500 text-xs">活动</th>
+                <th className="text-left py-3 px-4 font-medium text-slate-500 text-xs">报名时间</th>
+                <th className="text-left py-3 px-4 font-medium text-slate-500 text-xs">状态</th>
+                <th className="text-right py-3 px-4 font-medium text-slate-500 text-xs">操作</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((reg) => (
-                <tr key={reg.id} className="border-b border-gray-50">
-                  <td className="py-2.5 px-4">{reg.name}</td>
-                  <td className="py-2.5 px-4 text-gray-500">{reg.studentId}</td>
-                  <td className="py-2.5 px-4 text-gray-500">{reg.phone}</td>
-                  <td className="py-2.5 px-4 text-gray-600">{reg.event.title}</td>
-                  <td className="py-2.5 px-4 text-gray-400 text-xs">{formatDate(reg.createdAt, 'datetime')}</td>
+                <tr key={reg.id} className="border-b border-white/[0.04]">
+                  <td className="py-2.5 px-4 text-slate-200">{reg.name}</td>
+                  <td className="py-2.5 px-4 text-slate-400">{reg.studentId}</td>
+                  <td className="py-2.5 px-4 text-slate-400">{reg.phone}</td>
+                  <td className="py-2.5 px-4 text-slate-300">{reg.event.title}</td>
+                  <td className="py-2.5 px-4 text-slate-500 text-xs">{formatDate(reg.createdAt, 'datetime')}</td>
                   <td className="py-2.5 px-4">
-                    <span className={reg.status === 'confirmed' ? 'text-green-600' : reg.status === 'cancelled' ? 'text-red-500' : 'text-yellow-600'}>
+                    <span className={
+                      reg.status === 'confirmed' ? 'text-emerald-400' :
+                      reg.status === 'cancelled' ? 'text-red-400' :
+                      'text-amber-400'
+                    }>
                       {reg.status === 'confirmed' ? '已确认' : reg.status === 'cancelled' ? '已取消' : '待确认'}
                     </span>
                   </td>
@@ -118,24 +123,24 @@ export function RegistrationsClient({ registrations, events }: Props) {
         </div>
 
         {/* 手机端卡片 */}
-        <div className="md:hidden divide-y divide-gray-50">
+        <div className="md:hidden divide-y divide-white/[0.04]">
           {filtered.map((reg) => (
             <div key={reg.id} className="p-4">
               <div className="flex justify-between items-start mb-2">
                 <div>
-                  <span className="font-medium text-sm">{reg.name}</span>
-                  <span className="text-gray-400 text-xs ml-2">{reg.studentId}</span>
+                  <span className="font-medium text-sm text-slate-200">{reg.name}</span>
+                  <span className="text-slate-500 text-xs ml-2">{reg.studentId}</span>
                 </div>
                 <span className={
-                  reg.status === 'confirmed' ? 'text-green-600 text-xs' :
-                  reg.status === 'cancelled' ? 'text-red-500 text-xs' :
-                  'text-yellow-600 text-xs'
+                  reg.status === 'confirmed' ? 'text-emerald-400 text-xs' :
+                  reg.status === 'cancelled' ? 'text-red-400 text-xs' :
+                  'text-amber-400 text-xs'
                 }>
                   {reg.status === 'confirmed' ? '已确认' : reg.status === 'cancelled' ? '已取消' : '待确认'}
                 </span>
               </div>
-              <p className="text-xs text-gray-500">{reg.event.title}</p>
-              <p className="text-xs text-gray-400 mt-1">{reg.phone} · {formatDate(reg.createdAt, 'datetime')}</p>
+              <p className="text-xs text-slate-500">{reg.event.title}</p>
+              <p className="text-xs text-slate-600 mt-1">{reg.phone} · {formatDate(reg.createdAt, 'datetime')}</p>
               {reg.status === 'pending' && (
                 <div className="flex gap-2 mt-2">
                   <Button variant="primary" size="sm" onClick={() => updateStatus(reg.id, 'confirmed')}>确认</Button>
@@ -145,7 +150,7 @@ export function RegistrationsClient({ registrations, events }: Props) {
             </div>
           ))}
           {filtered.length === 0 && (
-            <p className="text-center text-gray-400 text-sm py-12">无匹配记录</p>
+            <p className="text-center text-slate-500 text-sm py-12">无匹配记录</p>
           )}
         </div>
       </div>

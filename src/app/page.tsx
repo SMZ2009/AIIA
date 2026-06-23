@@ -1,12 +1,23 @@
 import { FuturisticHero } from '@/components/home/FuturisticHero'
 import { FuturisticEvents } from '@/components/home/FuturisticEvents'
 import { FuturisticNews } from '@/components/home/FuturisticNews'
-import { partners } from '@/data/partners'
-import { Calendar, Newspaper, Handshake, Sparkles } from 'lucide-react'
+import { prisma } from '@/lib/prisma'
+import { Calendar, Newspaper, Handshake } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
 
-export default function HomePage() {
+const PARTNER_CATS = [
+  { key: 'ENTERPRISE', label: '企业伙伴' },
+  { key: 'UNIVERSITY', label: '高校伙伴' },
+  { key: 'COMMUNITY', label: '社区伙伴' },
+]
+
+export default async function HomePage() {
+  const partners = await prisma.partner.findMany({
+    orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
+  })
+  const grouped: Record<string, typeof partners> = {}
+  for (const c of PARTNER_CATS) grouped[c.key] = partners.filter((p) => p.category === c.key)
   return (
     <div className="bg-[#03050f] pb-[70px]">
       <FuturisticHero />
@@ -41,41 +52,45 @@ export default function HomePage() {
       </SectionBlock>
 
       {/* 合作伙伴 */}
-      <section className="relative z-20 px-5 pb-16">
+      <section className="relative z-20 px-5 pb-14">
         <div className="max-w-lg mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center">
-              <Handshake className="w-4 h-4 text-purple-400" />
+          <div className="flex items-center gap-2.5 mb-6">
+            <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+              <Handshake className="w-4 h-4 text-amber-400/70" />
             </div>
             <div>
-              <span className="text-[10px] text-purple-400/60 tracking-widest uppercase block text-center">Partners</span>
-              <h2 className="text-base font-bold text-white text-center">合作伙伴</h2>
+              <span className="text-[10px] text-amber-400/50 tracking-widest uppercase block">Partners</span>
+              <h2 className="text-base font-bold text-white">合作伙伴</h2>
             </div>
           </div>
-          <div className="flex items-center justify-center gap-4 flex-wrap">
-            {partners.map((p) => (
-              <div key={p.id} className="flex flex-col items-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.04] transition-all">
-                <div className="w-11 h-11 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center">
-                  {p.logoUrl ? (
-                    <img src={p.logoUrl} alt={p.name} className="w-6 h-6 object-contain opacity-60" />
-                  ) : (
-                    <span className="text-sm font-bold text-slate-600">{p.name[0]}</span>
-                  )}
+
+          <div className="space-y-5">
+            {PARTNER_CATS.map((cat) => {
+              const items = grouped[cat.key]
+              if (items.length === 0) return null
+              const accent = cat.key === 'ENTERPRISE' ? 'text-blue-300' : cat.key === 'UNIVERSITY' ? 'text-amber-300' : 'text-emerald-300'
+              return (
+                <div key={cat.key} className="flex items-center gap-4">
+                  <span className={`text-[11px] font-medium shrink-0 ${accent}`}>{cat.label}</span>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    {items.map((p) => (
+                      <div key={p.id} className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+                        {p.logoUrl ? (
+                          <img src={p.logoUrl} alt={p.name} className="h-4 object-contain opacity-50 hover:opacity-80 transition-opacity" />
+                        ) : (
+                          <span className="text-[11px] text-white/60">{p.name}</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <span className="text-[10px] text-slate-500">{p.name}</span>
-              </div>
-            ))}
+              )
+            })}
           </div>
+
         </div>
       </section>
 
-      {/* 底部品牌 */}
-      <div className="text-center pb-10">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.02] border border-white/[0.04]">
-          <Sparkles className="w-3 h-3 text-indigo-400" />
-          <span className="text-[11px] text-slate-500 tracking-wider">HITSZ AIIA · 创新 · 协作 · 成长</span>
-        </div>
-      </div>
     </div>
   )
 }

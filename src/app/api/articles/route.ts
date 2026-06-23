@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getAdminSession } from '@/lib/auth'
-import { slugify } from '@/lib/utils'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -28,13 +27,16 @@ export async function POST(req: NextRequest) {
   const article = await prisma.article.create({
     data: {
       title: data.title,
-      slug: data.slug || slugify(data.title),
       summary: data.summary,
-      content: data.content || '',
+      link: data.link || '',
       coverImage: data.coverImage || '',
-      author: data.author || '',
       status: data.status || 'draft',
-      publishedAt: data.status === 'published' ? new Date() : null,
+      publishedAt:
+        data.status === 'published'
+          ? data.publishedAt
+            ? new Date(data.publishedAt)
+            : new Date()
+          : null,
     },
   })
 

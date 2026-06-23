@@ -28,15 +28,15 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen-safe bg-slate-50 flex items-center justify-center p-5">
+    <div className="min-h-screen-safe bg-[#060918] flex items-center justify-center p-5">
       <div className="w-full max-w-[340px]">
         <div className="text-center mb-8">
-          <img src="/images/logoblack.jpg" alt="AIIA" className="w-16 h-16 rounded-2xl object-contain mx-auto mb-4 border border-slate-100 shadow-sm" />
-          <h1 className="text-xl font-bold text-slate-900">管理员登录</h1>
+          <img src="/images/logoblack.jpg" alt="AIIA" className="w-16 h-16 rounded-2xl object-contain mx-auto mb-4 border border-white/[0.08]" />
+          <h1 className="text-xl font-bold text-white">管理员登录</h1>
           <p className="text-sm text-slate-500 mt-1">HITSZ AIIA 后台管理系统</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-100 p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-2xl p-6 space-y-4">
           <Input label="用户名" placeholder="请输入用户名" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} />
           <Input label="密码" type="password" placeholder="请输入密码" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
           <Button type="submit" className="w-full" loading={loading}>登录</Button>

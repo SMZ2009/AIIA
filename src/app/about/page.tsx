@@ -20,8 +20,9 @@ export default function AboutPage() {
         {/* Logo */}
         <div className="glass-card p-5 text-center">
           <img src="/images/logoblack.jpg" alt="HITSZ AIIA" className="w-16 h-16 rounded-2xl object-contain mx-auto mb-3 bg-white p-2" />
-          <h2 className="text-lg font-bold text-white">哈尔滨工业大学（深圳）人工智能创新协会</h2>
-          <p className="text-sm text-slate-400 mt-1.5 max-w-xs mx-auto">哈工大深圳人工智能创协 · HITSZ AIIA</p>
+          <h2 className="text-lg font-bold text-white">哈尔滨工业大学（深圳）</h2>
+          <h2 className="text-lg font-bold text-white">人工智能创新协会</h2>
+          <p className="text-sm text-slate-400 mt-1.5 max-w-xs mx-auto">HITSZ AI Innovation Association</p>
         </div>
 
         {/* 使命 + 架构 */}
