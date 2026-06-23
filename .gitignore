@@ -1,0 +1,26 @@
+# deps
+node_modules/
+
+# next.js
+.next/
+out/
+
+# env
+.env
+.env*.local
+
+# database
+prisma/*.db
+prisma/*.db-journal
+
+# ide
+.idea/
+*.swp
+*.swo
+
+# os
+.DS_Store
+Thumbs.db
+
+# debug
+npm-debug.log*

@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- 管理员 ----------
+model User {
+  id           String @id @default(cuid())
+  username     String @unique
+  passwordHash String
+  displayName  String
+}
+
+// ---------- 活动 ----------
+model Event {
+  id                   String         @id @default(cuid())
+  title                String
+  summary              String
+  content              String         // Markdown 正文
+  coverImage           String         @default("")  // 外部图片 URL
+  startDate            DateTime
+  endDate              DateTime
+  location             String
+  maxParticipants      Int?
+  registrationDeadline DateTime?
+  status               String         @default("draft") // draft | published | cancelled | completed
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  registrations        Registration[]
+}
+
+// ---------- 报名 ----------
+model Registration {
+  id        String   @id @default(cuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name      String
+  studentId String
+  phone     String
+  email     String   @default("")
+  notes     String   @default("")
+  status    String   @default("pending") // pending | confirmed | cancelled
+  createdAt DateTime @default(now())
+
+  @@unique([eventId, studentId])
+}
+
+// ---------- 新闻/推文 ----------
+model Article {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  summary     String
+  content     String    // Markdown 正文
+  coverImage  String    @default("")
+  author      String    @default("")
+  status      String    @default("draft") // draft | published
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
