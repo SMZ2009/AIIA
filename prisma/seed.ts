@@ -19,7 +19,8 @@ async function main() {
   })
   console.log('✅ 管理员账号: admin / admin123')
 
-  // 2. 创建示例活动
+  // 2. 创建示例活动（先清空再插入，保证幂等）
+  await prisma.event.deleteMany()
   const events = [
     {
       title: '2024 年秋季招新宣讲会',
@@ -64,7 +65,8 @@ async function main() {
   }
   console.log('✅ 创建 3 场示例活动')
 
-  // 3. 创建示例文章（公众号外链）
+  // 3. 创建示例文章（先清空再插入，保证幂等）
+  await prisma.article.deleteMany()
   const articles = [
     {
       title: '社团顺利完成换届选举',
@@ -97,7 +99,8 @@ async function main() {
   }
   console.log('✅ 创建 3 篇示例文章（公众号外链）')
 
-  // 4. 创建示例合作伙伴
+  // 4. 创建示例合作伙伴（先清空再插入，保证幂等）
+  await prisma.partner.deleteMany()
   const partners = [
     { name: '华为技术有限公司', category: 'ENTERPRISE', sortOrder: 0 },
     { name: '腾讯科技', category: 'ENTERPRISE', sortOrder: 1 },
