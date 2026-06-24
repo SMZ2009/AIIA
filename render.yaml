@@ -6,10 +6,12 @@ services:
     startCommand: npx prisma db push && npm start
     envVars:
       - key: DATABASE_URL
-        value: file:./prisma/dev.db
+        fromDatabase:
+          name: aiia-db
+          property: connectionString
       - key: SESSION_SECRET
         generateValue: true
-    disk:
-      name: sqlite
-      mountPath: /opt/render/project/src/prisma
-      sizeGB: 1
+
+databases:
+  - name: aiia-db
+    plan: free
