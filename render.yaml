@@ -6,6 +6,6 @@ services:
     startCommand: npx prisma db push && npx tsx prisma/seed.ts && npm start
     envVars:
       - key: DATABASE_URL
-        value: "file:./prisma/dev.db"
+        value: "file:/opt/render/project/src/prisma/dev.db"
       - key: SESSION_SECRET
         generateValue: true
