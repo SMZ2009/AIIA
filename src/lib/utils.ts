@@ -5,8 +5,15 @@ export function cn(...inputs: (string | false | null | undefined)[]): string {
     .join(' ')
 }
 
-export function formatDate(date: Date | string, format: 'short' | 'long' | 'datetime' = 'short'): string {
-  const d = typeof date === 'string' ? new Date(date) : date
+function toDate(v: unknown): Date | null {
+  if (v instanceof Date) return v
+  if (typeof v === 'string' && v) return new Date(v)
+  return null
+}
+
+export function formatDate(date: unknown, format: 'short' | 'long' | 'datetime' = 'short'): string {
+  const d = toDate(date)
+  if (!d || isNaN(d.getTime())) return '--'
   const y = d.getFullYear()
   const m = String(d.getMonth() + 1).padStart(2, '0')
   const day = String(d.getDate()).padStart(2, '0')
@@ -18,9 +25,10 @@ export function formatDate(date: Date | string, format: 'short' | 'long' | 'date
   return `${m}-${day}`
 }
 
-export function formatDateRange(start: Date | string, end: Date | string): string {
-  const s = typeof start === 'string' ? new Date(start) : start
-  const e = typeof end === 'string' ? new Date(end) : end
+export function formatDateRange(start: unknown, end: unknown): string {
+  const s = toDate(start)
+  const e = toDate(end)
+  if (!s || !e) return '--'
   const sStr = formatDate(s, 'short')
   const eStr = formatDate(e, 'short')
   if (sStr === eStr) return sStr

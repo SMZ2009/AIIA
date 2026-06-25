@@ -140,7 +140,11 @@ export interface RegistrationRow { id: string; eventId: string; name: string; st
 function toDates(row: Row | null, dateFields: string[]) {
   if (!row) return row
   for (const f of dateFields) {
-    if (row[f] && typeof row[f] === 'string') row[f] = new Date(row[f] as string)
+    const v = row[f]
+    if (v && typeof v === 'string') {
+      const d = new Date(v)
+      if (!isNaN(d.getTime())) row[f] = d
+    }
   }
   return row
 }
