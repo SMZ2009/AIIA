@@ -1,6 +1,5 @@
 import Database from 'better-sqlite3'
 import path from 'path'
-import fs from 'fs'
 
 // ── 数据库初始化 ────────────────────────────────────────
 // Render 用绝对路径（磁盘挂载），本地用相对路径
@@ -74,58 +73,16 @@ sqlite.exec(`
   );
 `)
 
-// ── 种子数据 ──────────────────────────────────────────
-function maybeSeed() {
+// ── 初始化管理员（仅首次运行） ───────────────────────
+function ensureAdmin() {
   const userCount = sqlite.prepare('SELECT COUNT(*) as c FROM User').get() as { c: number }
-  if (userCount.c > 0) return // 已播种，跳过
-
-  const now = new Date().toISOString()
-  const uid = () => crypto.randomUUID()
-
-  // 管理员
+  if (userCount.c > 0) return
   const bcrypt = require('bcryptjs')
   const hash = bcrypt.hashSync('admin123', 12)
-  sqlite.prepare('INSERT OR IGNORE INTO User (id, username, passwordHash, displayName) VALUES (?, ?, ?, ?)').run(uid(), 'admin', hash, '管理员')
-
-  // 从 seed.json 读取数据
-  const seedPath = path.join(process.cwd(), 'prisma', 'seed.json')
-  let seed: { events?: any[]; articles?: any[]; partners?: any[] } = {}
-  try {
-    seed = JSON.parse(fs.readFileSync(seedPath, 'utf-8'))
-  } catch { return } // seed.json 不存在则跳过
-
-  // 先清空再插入，保证数据库与 seed.json 完全一致
-  sqlite.prepare('DELETE FROM Registration').run()
-  sqlite.prepare('DELETE FROM Event').run()
-  sqlite.prepare('DELETE FROM Article').run()
-  sqlite.prepare('DELETE FROM Partner').run()
-
-  // 活动
-  if (seed.events) {
-    const insertEvent = sqlite.prepare('INSERT INTO Event (id, title, summary, content, coverImage, startDate, endDate, location, maxParticipants, registrationDeadline, status, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')
-    for (const e of seed.events) {
-      insertEvent.run(uid(), e.title, e.summary, e.content || '', e.coverImage || '', e.startDate, e.endDate, e.location, e.maxParticipants || null, e.registrationDeadline || null, e.status || 'published', now, now)
-    }
-  }
-
-  // 文章
-  if (seed.articles) {
-    const insertArticle = sqlite.prepare('INSERT INTO Article (id, title, summary, link, coverImage, status, publishedAt, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?)')
-    for (const a of seed.articles) {
-      insertArticle.run(uid(), a.title, a.summary, a.link, a.coverImage || '', a.status || 'published', a.publishedAt || null, now, now)
-    }
-  }
-
-  // 合作伙伴
-  if (seed.partners) {
-    const insertPartner = sqlite.prepare('INSERT INTO Partner (id, name, logoUrl, link, category, sortOrder, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?)')
-    for (const p of seed.partners) {
-      insertPartner.run(uid(), p.name, p.logoUrl || '', p.link || '', p.category || 'COMMUNITY', p.sortOrder || 0, now, now)
-    }
-  }
+  sqlite.prepare('INSERT OR IGNORE INTO User (id, username, passwordHash, displayName) VALUES (?, ?, ?, ?)').run(crypto.randomUUID(), 'admin', hash, '管理员')
 }
 
-maybeSeed()
+ensureAdmin()
 
 // ── 工具函数 ──────────────────────────────────────────
 
