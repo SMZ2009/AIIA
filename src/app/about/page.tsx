@@ -31,7 +31,7 @@ export default function AboutPage() {
             <Target className="w-4 h-4 text-indigo-400" />
           </div>
           <h3 className="text-base font-bold text-white mb-1.5">我们的使命</h3>
-          <p className="text-sm text-slate-400 leading-relaxed">哈尔滨工业大学（深圳）人工智能创新协会（简称：哈工大深圳人工智能创协，英文 HITSZ AIIA）秉承「创新 · 协作 · 成长」的理念，通过技术分享、项目实战、行业交流等活动，帮助成员拓展视野、提升技能、建立人脉。</p>
+          <p className="text-sm text-slate-400 leading-relaxed">搭建跨学科、开放性的人工智能交流与创新实践平台，聚焦AI技术落地应用、互联网全栈技术开发、产品设计与市场创新，融合技术学习、实战开发、产品孵化、商业思维、校企资源对接、校际交流等内容，助力成员全面成长。</p>
         </div>
 
         <div className="glass-card p-5">
@@ -52,9 +52,8 @@ export default function AboutPage() {
         <div className="glass-card p-5 text-center">
           <h3 className="text-base font-bold text-white mb-3">联系我们</h3>
           <div className="flex flex-col items-center gap-2.5 text-sm text-slate-400">
-            <span className="flex items-center gap-2"><Mail className="w-4 h-4 text-indigo-400" />aiia@example.com</span>
-            <span className="flex items-center gap-2"><Users className="w-4 h-4 text-indigo-400" />微信公众号：HITSZ_AIIA</span>
-            <span className="flex items-center gap-2"><MapPin className="w-4 h-4 text-indigo-400" />学生活动中心 205</span>
+            <span className="flex items-center gap-2"><Mail className="w-4 h-4 text-indigo-400" />hitszaiia@qq.com</span>
+            <span className="flex items-center gap-2"><Users className="w-4 h-4 text-indigo-400" />微信公众号：哈工深AIIA</span>
           </div>
         </div>
       </div>
