@@ -27,4 +27,3 @@ Thumbs.db
 # debug
 npm-debug.log*
 tsconfig.tsbuildinfo
-public/uploads/
