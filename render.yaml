@@ -3,9 +3,7 @@ services:
     name: aiia
     env: node
     buildCommand: npm install && npm run build
-    startCommand: npx prisma db push && npx tsx prisma/seed.ts && npm start
+    startCommand: npm start
     envVars:
-      - key: DATABASE_URL
-        value: "file:/opt/render/project/src/prisma/dev.db"
       - key: SESSION_SECRET
         generateValue: true
