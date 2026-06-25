@@ -1,5 +1,99 @@
 {
   "events": [],
-  "articles": [],
-  "partners": []
+  "articles": [
+    {
+      "title": "抖音AI创变者计划2026丨抖音造世界专场",
+      "summary": "",
+      "link": "https://mp.weixin.qq.com/s/bO6yNzAGYir7LotcEVkp5Q",
+      "coverImage": "/uploads/4f039687-bf81-4ce8-8a36-d1b93e612dfe.jpg",
+      "status": "published",
+      "publishedAt": "2026-06-17T23:04:00.000Z"
+    }
+  ],
+  "partners": [
+    {
+      "name": "抖音AI创变者计划",
+      "logoUrl": "",
+      "link": "",
+      "category": "ENTERPRISE",
+      "sortOrder": 1
+    },
+    {
+      "name": "深客松",
+      "logoUrl": "",
+      "link": "",
+      "category": "COMMUNITY",
+      "sortOrder": 1
+    },
+    {
+      "name": "哈尔滨工业大学（深圳）青年创客俱乐部",
+      "logoUrl": "",
+      "link": "",
+      "category": "UNIVERSITY",
+      "sortOrder": 1
+    },
+    {
+      "name": "腾讯开悟",
+      "logoUrl": "",
+      "link": "",
+      "category": "ENTERPRISE",
+      "sortOrder": 2
+    },
+    {
+      "name": "北京大学青年创业者协会 YEA",
+      "logoUrl": "",
+      "link": "",
+      "category": "UNIVERSITY",
+      "sortOrder": 2
+    },
+    {
+      "name": "周周黑客松 Hackathon Weekly",
+      "logoUrl": "",
+      "link": "",
+      "category": "COMMUNITY",
+      "sortOrder": 2
+    },
+    {
+      "name": "大东北黑客松",
+      "logoUrl": "",
+      "link": "",
+      "category": "COMMUNITY",
+      "sortOrder": 3
+    },
+    {
+      "name": "清华大学深研院散步实验室 Walking Lab",
+      "logoUrl": "",
+      "link": "",
+      "category": "UNIVERSITY",
+      "sortOrder": 3
+    },
+    {
+      "name": "XbotPark机器人宁波基地 / 宁波智能技术研究院",
+      "logoUrl": "",
+      "link": "",
+      "category": "ENTERPRISE",
+      "sortOrder": 3
+    },
+    {
+      "name": "深圳大学OPC社区",
+      "logoUrl": "",
+      "link": "",
+      "category": "UNIVERSITY",
+      "sortOrder": 4
+    },
+    {
+      "name": "Rebuild-Z",
+      "logoUrl": "",
+      "link": "",
+      "category": "COMMUNITY",
+      "sortOrder": 4
+    },
+    {
+      "name": "深圳兔展智能科技有限公司 RabbitPre",
+      "logoUrl": "",
+      "link": "",
+      "category": "ENTERPRISE",
+      "sortOrder": 4
+    }
+  ]
 }
