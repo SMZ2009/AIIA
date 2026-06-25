@@ -82,7 +82,7 @@ function ensureBoot() {
   // 管理员
   const bcrypt = require('bcryptjs')
   const hash = bcrypt.hashSync('admin123', 12)
-  sqlite.prepare('INSERT INTO User (id, username, passwordHash, displayName) VALUES (?, ?, ?, ?)').run(uid(), 'admin', hash, '管理员')
+  sqlite.prepare('INSERT OR IGNORE INTO User (id, username, passwordHash, displayName) VALUES (?, ?, ?, ?)').run(uid(), 'admin', hash, '管理员')
 
   // 从 seed.json 加载初始数据
   const seedPath = path.join(process.cwd(), 'prisma', 'seed.json')
@@ -90,15 +90,15 @@ function ensureBoot() {
   try { seed = JSON.parse(fs.readFileSync(seedPath, 'utf-8')) } catch { return }
 
   if (seed.events) {
-    const stmt = sqlite.prepare('INSERT INTO Event (id, title, summary, content, coverImage, startDate, endDate, location, maxParticipants, registrationDeadline, status, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')
+    const stmt = sqlite.prepare('INSERT OR IGNORE INTO Event (id, title, summary, content, coverImage, startDate, endDate, location, maxParticipants, registrationDeadline, status, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')
     for (const e of seed.events) stmt.run(uid(), e.title, e.summary, e.content || '', e.coverImage || '', e.startDate, e.endDate, e.location, e.maxParticipants || null, e.registrationDeadline || null, e.status || 'published', now, now)
   }
   if (seed.articles) {
-    const stmt = sqlite.prepare('INSERT INTO Article (id, title, summary, link, coverImage, status, publishedAt, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?)')
+    const stmt = sqlite.prepare('INSERT OR IGNORE INTO Article (id, title, summary, link, coverImage, status, publishedAt, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?)')
     for (const a of seed.articles) stmt.run(uid(), a.title, a.summary, a.link, a.coverImage || '', a.status || 'published', a.publishedAt || null, now, now)
   }
   if (seed.partners) {
-    const stmt = sqlite.prepare('INSERT INTO Partner (id, name, logoUrl, link, category, sortOrder, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?)')
+    const stmt = sqlite.prepare('INSERT OR IGNORE INTO Partner (id, name, logoUrl, link, category, sortOrder, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?)')
     for (const p of seed.partners) stmt.run(uid(), p.name, p.logoUrl || '', p.link || '', p.category || 'COMMUNITY', p.sortOrder || 0, now, now)
   }
 }
