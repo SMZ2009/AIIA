@@ -82,7 +82,7 @@ function maybeSeed() {
   // 密码 admin123 的 bcrypt hash（cost 12）
   const bcrypt = require('bcryptjs')
   const hash = bcrypt.hashSync('admin123', 12)
-  sqlite.prepare('INSERT INTO User (id, username, passwordHash, displayName) VALUES (?, ?, ?, ?)').run(uid(), 'admin', hash, '管理员')
+  sqlite.prepare('INSERT OR IGNORE INTO User (id, username, passwordHash, displayName) VALUES (?, ?, ?, ?)').run(uid(), 'admin', hash, '管理员')
 
   // 活动
   const events = [
@@ -90,7 +90,7 @@ function maybeSeed() {
     [uid(), '技术分享会：AI 时代的编程新范式', '探讨大语言模型如何改变软件开发流程，现场演示 Claude Code 使用技巧。', '## 分享主题\n\n...', '', new Date('2025-10-20T14:00:00').toISOString(), new Date('2025-10-20T17:00:00').toISOString(), '教学楼 B 栋 201', 50, new Date('2025-10-19T18:00:00').toISOString(), 'published', now, now],
     [uid(), '社团团建：户外拓展日', '金秋十月，一起走出校园，在户外活动中增进友谊。', '## 团建安排\n\n...', '', new Date('2025-10-28T08:30:00').toISOString(), new Date('2025-10-28T17:00:00').toISOString(), '郊区阳光营地', 30, new Date('2025-10-25T23:59:00').toISOString(), 'published', now, now],
   ]
-  const insertEvent = sqlite.prepare('INSERT INTO Event (id, title, summary, content, coverImage, startDate, endDate, location, maxParticipants, registrationDeadline, status, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')
+  const insertEvent = sqlite.prepare('INSERT OR IGNORE INTO Event (id, title, summary, content, coverImage, startDate, endDate, location, maxParticipants, registrationDeadline, status, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')
   for (const e of events) insertEvent.run(...e)
 
   // 文章
@@ -99,7 +99,7 @@ function maybeSeed() {
     [uid(), '回顾：春季校园文化节圆满落幕', '为期三天的校园文化节吸引了超过 500 名同学参与。', 'https://mp.weixin.qq.com/s/example-2', 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=940&h=400&fit=crop', 'published', new Date('2024-05-22T14:00:00').toISOString(), now, now],
     [uid(), '新生指南：如何平衡学业与社团生活', '给大一新生的建议：在社团活动中成长，同时保持学业成绩。', 'https://mp.weixin.qq.com/s/example-3', 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=940&h=400&fit=crop', 'published', new Date('2024-08-15T09:00:00').toISOString(), now, now],
   ]
-  const insertArticle = sqlite.prepare('INSERT INTO Article (id, title, summary, link, coverImage, status, publishedAt, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?)')
+  const insertArticle = sqlite.prepare('INSERT OR IGNORE INTO Article (id, title, summary, link, coverImage, status, publishedAt, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?)')
   for (const a of articles) insertArticle.run(...a)
 
   // 合作伙伴
@@ -113,7 +113,7 @@ function maybeSeed() {
     ['计算机协会', 'COMMUNITY', 2],
     ['摄影社', 'COMMUNITY', 3],
   ]
-  const insertPartner = sqlite.prepare('INSERT INTO Partner (id, name, logoUrl, link, category, sortOrder, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?)')
+  const insertPartner = sqlite.prepare('INSERT OR IGNORE INTO Partner (id, name, logoUrl, link, category, sortOrder, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?)')
   for (const p of partners) insertPartner.run(uid(), p[0], '', '', p[1], p[2], now, now)
 }
 
