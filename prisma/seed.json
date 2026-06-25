@@ -7,7 +7,7 @@
       "link": "https://mp.weixin.qq.com/s/bO6yNzAGYir7LotcEVkp5Q",
       "coverImage": "/uploads/4f039687-bf81-4ce8-8a36-d1b93e612dfe.jpg",
       "status": "published",
-      "publishedAt": "2026-06-17T23:04:00.000Z"
+      "publishedAt": "2026-06-18T15:04:00.000Z"
     }
   ],
   "partners": [
@@ -26,14 +26,7 @@
       "sortOrder": 1
     },
     {
-      "name": "哈尔滨工业大学（深圳）青年创客俱乐部",
-      "logoUrl": "",
-      "link": "",
-      "category": "UNIVERSITY",
-      "sortOrder": 1
-    },
-    {
-      "name": "腾讯开悟",
+      "name": "腾讯开悟平台",
       "logoUrl": "",
       "link": "",
       "category": "ENTERPRISE",
