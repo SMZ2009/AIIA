@@ -9,9 +9,9 @@ import { Suspense } from 'react'
 export const dynamic = 'force-dynamic'
 
 const PARTNER_CATS = [
-  { key: 'ENTERPRISE', label: '企业伙伴', icon: Building2, accent: 'from-blue-500/20 to-blue-600/10 border-blue-500/20 text-blue-300' },
-  { key: 'UNIVERSITY', label: '高校伙伴', icon: GraduationCap, accent: 'from-amber-500/20 to-amber-600/10 border-amber-500/20 text-amber-300' },
-  { key: 'COMMUNITY', label: '社区伙伴', icon: Users, accent: 'from-emerald-500/20 to-emerald-600/10 border-emerald-500/20 text-emerald-300' },
+  { key: 'ENTERPRISE', label: '企业伙伴', icon: Building2, textColor: 'text-blue-300' },
+  { key: 'UNIVERSITY', label: '高校伙伴', icon: GraduationCap, textColor: 'text-amber-300' },
+  { key: 'COMMUNITY', label: '社区伙伴', icon: Users, textColor: 'text-emerald-300' },
 ]
 
 export default async function HomePage() {
@@ -57,9 +57,9 @@ export default async function HomePage() {
       <section className="relative z-20 px-5 pb-14">
         <div className="max-w-lg mx-auto">
           {/* 区块标题 */}
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
-              <Handshake className="w-5 h-5 text-amber-400" />
+          <div className="flex items-center gap-3 mb-7">
+            <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+              <Handshake className="w-4 h-4 text-amber-400" />
             </div>
             <div>
               <span className="text-xs text-amber-400/50 tracking-widest uppercase">Partners</span>
@@ -68,52 +68,27 @@ export default async function HomePage() {
           </div>
 
           {/* 分类列表 */}
-          <div className="space-y-8">
+          <div className="space-y-6">
             {PARTNER_CATS.map((cat) => {
               const items = grouped[cat.key]
               if (items.length === 0) return null
               const Icon = cat.icon
               return (
-                <div key={cat.key}>
-                  {/* 分类标题 */}
-                  <div className="flex items-center gap-2 mb-3.5">
-                    <Icon className="w-4 h-4 text-slate-400" />
-                    <h3 className="text-sm font-semibold text-slate-300">{cat.label}</h3>
-                    <span className="text-xs text-slate-500 ml-1">{items.length}</span>
+                <div key={cat.key} className="flex items-start gap-5">
+                  {/* 分类标签 */}
+                  <div className="flex items-center gap-1.5 shrink-0 pt-0.5">
+                    <Icon className="w-3.5 h-3.5 text-slate-500" />
+                    <span className={`text-sm font-medium ${cat.textColor}`}>{cat.label}</span>
                   </div>
 
-                  {/* 伙伴卡片网格 */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {/* 伙伴列表 */}
+                  <div className="flex items-center gap-4 flex-wrap">
                     {items.map((p) => (
-                      <div
-                        key={p.id}
-                        className="group relative bg-white/[0.03] backdrop-blur-sm border border-white/[0.06] hover:border-white/[0.12] rounded-xl px-4 py-4 transition-all duration-300 hover:bg-white/[0.06]"
-                      >
-                        {/* Logo / 首字 */}
-                        <div className="w-10 h-10 rounded-lg bg-[#0a0f1e] border border-white/[0.06] flex items-center justify-center mb-3 overflow-hidden group-hover:border-white/[0.12] transition-colors">
-                          {p.logoUrl ? (
-                            <img src={p.logoUrl} alt={p.name} className="w-full h-full object-contain p-1.5" />
-                          ) : (
-                            <span className="text-base font-bold text-slate-400">{p.name?.[0] || '?'}</span>
-                          )}
-                        </div>
-
-                        {/* 名称 */}
-                        <p className="text-sm font-medium text-white/80 group-hover:text-white leading-snug line-clamp-2 transition-colors">
-                          {p.name}
-                        </p>
-
-                        {/* 链接指示 */}
-                        {p.link && (
-                          <a
-                            href={p.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-block mt-2 text-xs text-slate-500 hover:text-indigo-400 truncate max-w-full transition-colors"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {p.link.replace(/^https?:\/\//, '').replace(/\/$/, '')}
-                          </a>
+                      <div key={p.id} className="flex items-center gap-1.5">
+                        {p.logoUrl ? (
+                          <img src={p.logoUrl} alt={p.name} className="h-6 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                        ) : (
+                          <span className="text-sm font-medium text-white/70 hover:text-white transition-colors">{p.name}</span>
                         )}
                       </div>
                     ))}
