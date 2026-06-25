@@ -2,8 +2,9 @@ import { getAdminSession } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { StatsCard } from '@/components/admin/StatsCard'
-import { Calendar, ClipboardList, Newspaper } from 'lucide-react'
+import { Calendar, ClipboardList, Newspaper, Download } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
+import { ExportButton } from '@/components/admin/ExportButton'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: '仪表盘 | 管理后台' }
@@ -31,11 +32,15 @@ export default async function AdminDashboard() {
       <h1 className="text-xl font-bold text-white mb-6">仪表盘</h1>
 
       {/* 统计卡片 */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
         <StatsCard label="活动总数" value={totalEvents} icon={Calendar} />
         <StatsCard label="即将开始" value={upcomingEvents} icon={Calendar} />
         <StatsCard label="报名总数" value={totalRegistrations} icon={ClipboardList} />
         <StatsCard label="文章总数" value={totalArticles} icon={Newspaper} />
+      </div>
+
+      <div className="mb-8">
+        <ExportButton />
       </div>
 
       {/* 近期报名 */}

@@ -5,11 +5,5 @@ services:
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
-      - key: DATABASE_URL
-        value: "file:/opt/render/project/src/data/dev.db"
       - key: SESSION_SECRET
         generateValue: true
-    disk:
-      name: sqlite-data
-      mountPath: /opt/render/project/src/data
-      sizeGB: 1
