@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { LayoutDashboard, Calendar, Newspaper, ClipboardList, Handshake, LogOut, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Calendar, Newspaper, ClipboardList, Handshake, LogOut, Menu, X, FileJson } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -12,6 +12,7 @@ const links = [
   { href: '/admin/articles', label: '文章管理', icon: Newspaper },
   { href: '/admin/registrations', label: '报名管理', icon: ClipboardList },
   { href: '/admin/partners', label: '合作伙伴', icon: Handshake },
+  { href: '/admin/seed', label: '种子数据', icon: FileJson },
 ]
 
 function SidebarNav({ onClose }: { onClose?: () => void }) {
