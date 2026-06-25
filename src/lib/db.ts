@@ -3,7 +3,10 @@ import path from 'path'
 import fs from 'fs'
 
 // ── 数据库初始化 ────────────────────────────────────────
-const DB_PATH = path.join(process.cwd(), 'prisma', 'dev.db')
+// Render 用绝对路径（磁盘挂载），本地用相对路径
+const DB_PATH = process.env.DATABASE_URL
+  ? process.env.DATABASE_URL.replace('file:', '')
+  : path.join(process.cwd(), 'prisma', 'dev.db')
 const sqlite = new Database(DB_PATH)
 sqlite.pragma('journal_mode = WAL')
 sqlite.pragma('foreign_keys = ON')
