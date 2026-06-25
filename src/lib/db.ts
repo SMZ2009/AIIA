@@ -124,6 +124,13 @@ maybeSeed()
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Row = Record<string, any>
 
+// ── 模型接口（用来替代 Prisma 生成的类型）────────────
+export interface PartnerRow { id: string; name: string; logoUrl: string; link: string; category: string; sortOrder: number; createdAt: Date; updatedAt: Date }
+export interface EventRow { id: string; title: string; summary: string; content: string; coverImage: string; startDate: Date; endDate: Date; location: string; maxParticipants: number | null; registrationDeadline: Date | null; status: string; createdAt: Date; updatedAt: Date; _count?: { registrations: number } }
+export interface ArticleRow { id: string; title: string; summary: string; link: string; coverImage: string; status: string; publishedAt: Date | null; createdAt: Date; updatedAt: Date }
+export interface UserRow { id: string; username: string; passwordHash: string; displayName: string }
+export interface RegistrationRow { id: string; eventId: string; name: string; studentId: string; phone: string; email: string; notes: string; status: string; createdAt: Date; event?: { title: string } | null }
+
 function toDates(row: Row | null, dateFields: string[]) {
   if (!row) return row
   for (const f of dateFields) {
