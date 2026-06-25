@@ -1,5 +1,6 @@
 import Database from 'better-sqlite3'
 import path from 'path'
+import fs from 'fs'
 
 // ── 数据库初始化 ────────────────────────────────────────
 const DB_PATH = path.join(process.cwd(), 'prisma', 'dev.db')
@@ -79,42 +80,40 @@ function maybeSeed() {
   const uid = () => crypto.randomUUID()
 
   // 管理员
-  // 密码 admin123 的 bcrypt hash（cost 12）
   const bcrypt = require('bcryptjs')
   const hash = bcrypt.hashSync('admin123', 12)
   sqlite.prepare('INSERT OR IGNORE INTO User (id, username, passwordHash, displayName) VALUES (?, ?, ?, ?)').run(uid(), 'admin', hash, '管理员')
 
+  // 从 seed.json 读取数据
+  const seedPath = path.join(process.cwd(), 'prisma', 'seed.json')
+  let seed: { events?: any[]; articles?: any[]; partners?: any[] } = {}
+  try {
+    seed = JSON.parse(fs.readFileSync(seedPath, 'utf-8'))
+  } catch { return } // seed.json 不存在则跳过
+
   // 活动
-  const events = [
-    [uid(), '2024 年秋季招新宣讲会', '欢迎加入我们的大家庭！现场了解社团文化与各部门职责。', '## 活动介绍\n\n欢迎参加...', '', new Date('2025-09-15T18:30:00').toISOString(), new Date('2025-09-15T20:30:00').toISOString(), '学生活动中心 301 会议室', 80, new Date('2025-09-14T23:59:00').toISOString(), 'published', now, now],
-    [uid(), '技术分享会：AI 时代的编程新范式', '探讨大语言模型如何改变软件开发流程，现场演示 Claude Code 使用技巧。', '## 分享主题\n\n...', '', new Date('2025-10-20T14:00:00').toISOString(), new Date('2025-10-20T17:00:00').toISOString(), '教学楼 B 栋 201', 50, new Date('2025-10-19T18:00:00').toISOString(), 'published', now, now],
-    [uid(), '社团团建：户外拓展日', '金秋十月，一起走出校园，在户外活动中增进友谊。', '## 团建安排\n\n...', '', new Date('2025-10-28T08:30:00').toISOString(), new Date('2025-10-28T17:00:00').toISOString(), '郊区阳光营地', 30, new Date('2025-10-25T23:59:00').toISOString(), 'published', now, now],
-  ]
-  const insertEvent = sqlite.prepare('INSERT OR IGNORE INTO Event (id, title, summary, content, coverImage, startDate, endDate, location, maxParticipants, registrationDeadline, status, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')
-  for (const e of events) insertEvent.run(...e)
+  if (seed.events) {
+    const insertEvent = sqlite.prepare('INSERT OR IGNORE INTO Event (id, title, summary, content, coverImage, startDate, endDate, location, maxParticipants, registrationDeadline, status, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')
+    for (const e of seed.events) {
+      insertEvent.run(uid(), e.title, e.summary, e.content || '', e.coverImage || '', e.startDate, e.endDate, e.location, e.maxParticipants || null, e.registrationDeadline || null, e.status || 'published', now, now)
+    }
+  }
 
   // 文章
-  const articles = [
-    [uid(), '社团顺利完成换届选举', '新一届社团管理团队正式上任，将带来全新的发展计划。', 'https://mp.weixin.qq.com/s/example-1', 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=940&h=400&fit=crop', 'published', new Date('2024-09-01T10:00:00').toISOString(), now, now],
-    [uid(), '回顾：春季校园文化节圆满落幕', '为期三天的校园文化节吸引了超过 500 名同学参与。', 'https://mp.weixin.qq.com/s/example-2', 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=940&h=400&fit=crop', 'published', new Date('2024-05-22T14:00:00').toISOString(), now, now],
-    [uid(), '新生指南：如何平衡学业与社团生活', '给大一新生的建议：在社团活动中成长，同时保持学业成绩。', 'https://mp.weixin.qq.com/s/example-3', 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=940&h=400&fit=crop', 'published', new Date('2024-08-15T09:00:00').toISOString(), now, now],
-  ]
-  const insertArticle = sqlite.prepare('INSERT OR IGNORE INTO Article (id, title, summary, link, coverImage, status, publishedAt, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?)')
-  for (const a of articles) insertArticle.run(...a)
+  if (seed.articles) {
+    const insertArticle = sqlite.prepare('INSERT OR IGNORE INTO Article (id, title, summary, link, coverImage, status, publishedAt, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?)')
+    for (const a of seed.articles) {
+      insertArticle.run(uid(), a.title, a.summary, a.link, a.coverImage || '', a.status || 'published', a.publishedAt || null, now, now)
+    }
+  }
 
   // 合作伙伴
-  const partners = [
-    ['华为技术有限公司', 'ENTERPRISE', 0],
-    ['腾讯科技', 'ENTERPRISE', 1],
-    ['深圳清华大学研究院', 'UNIVERSITY', 0],
-    ['南方科技大学', 'UNIVERSITY', 1],
-    ['校学生会', 'COMMUNITY', 0],
-    ['青年志愿者协会', 'COMMUNITY', 1],
-    ['计算机协会', 'COMMUNITY', 2],
-    ['摄影社', 'COMMUNITY', 3],
-  ]
-  const insertPartner = sqlite.prepare('INSERT OR IGNORE INTO Partner (id, name, logoUrl, link, category, sortOrder, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?)')
-  for (const p of partners) insertPartner.run(uid(), p[0], '', '', p[1], p[2], now, now)
+  if (seed.partners) {
+    const insertPartner = sqlite.prepare('INSERT OR IGNORE INTO Partner (id, name, logoUrl, link, category, sortOrder, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?)')
+    for (const p of seed.partners) {
+      insertPartner.run(uid(), p.name, p.logoUrl || '', p.link || '', p.category || 'COMMUNITY', p.sortOrder || 0, now, now)
+    }
+  }
 }
 
 maybeSeed()
