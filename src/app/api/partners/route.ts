@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getAdminSession } from '@/lib/auth'
+import { syncSeedJson } from '@/lib/seed-sync'
 
 // GET — 公开，用于前端展示
 export async function GET() {
@@ -25,5 +26,6 @@ export async function POST(req: NextRequest) {
       sortOrder: data.sortOrder || 0,
     },
   })
+  syncSeedJson().catch(err => console.error('seed sync failed:', err))
   return NextResponse.json(partner, { status: 201 })
 }

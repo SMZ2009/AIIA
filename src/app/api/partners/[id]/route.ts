@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getAdminSession } from '@/lib/auth'
+import { syncSeedJson } from '@/lib/seed-sync'
 
 // PUT — 编辑
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
@@ -16,6 +17,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   if (data.sortOrder !== undefined) updateData.sortOrder = data.sortOrder
 
   const partner = await prisma.partner.update({ where: { id: params.id }, data: updateData })
+  syncSeedJson().catch(err => console.error('seed sync failed:', err))
   return NextResponse.json(partner)
 }
 
@@ -25,5 +27,6 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   if (!session) return NextResponse.json({ error: '未登录' }, { status: 401 })
 
   await prisma.partner.delete({ where: { id: params.id } })
+  syncSeedJson().catch(err => console.error('seed sync failed:', err))
   return NextResponse.json({ success: true })
 }

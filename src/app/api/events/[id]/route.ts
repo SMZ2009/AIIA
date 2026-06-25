@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getAdminSession } from '@/lib/auth'
+import { syncSeedJson } from '@/lib/seed-sync'
 
 export async function GET(
   req: NextRequest,
@@ -43,6 +44,7 @@ export async function PUT(
     },
   })
 
+  syncSeedJson().catch(err => console.error('seed sync failed:', err))
   return NextResponse.json(event)
 }
 
@@ -56,5 +58,6 @@ export async function DELETE(
   }
 
   await prisma.event.delete({ where: { id: params.id } })
+  syncSeedJson().catch(err => console.error('seed sync failed:', err))
   return NextResponse.json({ success: true })
 }

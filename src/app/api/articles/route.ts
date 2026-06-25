@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getAdminSession } from '@/lib/auth'
+import { syncSeedJson } from '@/lib/seed-sync'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -40,5 +41,6 @@ export async function POST(req: NextRequest) {
     },
   })
 
+  syncSeedJson().catch(err => console.error('seed sync failed:', err))
   return NextResponse.json(article, { status: 201 })
 }

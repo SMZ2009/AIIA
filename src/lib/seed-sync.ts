@@ -1,9 +1,14 @@
-import { NextResponse } from 'next/server'
+// 每次数据变更后自动同步 prisma/seed.json，防止部署后数据丢失
 import { prisma } from '@/lib/prisma'
 import fs from 'fs'
 import path from 'path'
 
-export async function POST() {
+function dateStr(d: any): string | null {
+  if (!d) return null
+  return new Date(d).toISOString()
+}
+
+export async function syncSeedJson() {
   try {
     const [events, articles, partners] = await Promise.all([
       prisma.event.findMany({ orderBy: { startDate: 'asc' } }),
@@ -30,23 +35,10 @@ export async function POST() {
       })),
     }
 
-    const json = JSON.stringify(data, null, 2)
-
-    // 写入服务器端文件（本地开发用）
     const seedPath = path.join(process.cwd(), 'prisma', 'seed.json')
-    fs.writeFileSync(seedPath, json, 'utf-8')
-
-    // 返回可下载的文件响应
-    return new NextResponse(json, {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Disposition': 'attachment; filename="seed.json"',
-      },
-    })
-  } catch (e) {
-    return NextResponse.json({ error: String(e) }, { status: 500 })
+    fs.writeFileSync(seedPath, JSON.stringify(data, null, 2), 'utf-8')
+    console.log(`[seed-sync] Written ${data.events.length} events, ${data.articles.length} articles, ${data.partners.length} partners → prisma/seed.json`)
+  } catch (err) {
+    console.error('[seed-sync] Failed to sync seed.json:', err)
   }
 }
-
-function dateStr(d: any) { if (!d) return null; return new Date(d).toISOString() }
