@@ -103,7 +103,9 @@ function ensureBoot() {
   }
 }
 
-ensureBoot()
+// 构建时跳过初始化（多 worker 并发会导致 SQLITE_BUSY / UNIQUE 冲突）
+// 运行时（dev / start）正常执行
+if (!process.env.NEXT_PHASE) ensureBoot()
 
 // ── 工具函数 ──────────────────────────────────────────
 
