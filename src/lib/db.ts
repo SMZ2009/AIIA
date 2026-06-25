@@ -91,9 +91,15 @@ function maybeSeed() {
     seed = JSON.parse(fs.readFileSync(seedPath, 'utf-8'))
   } catch { return } // seed.json 不存在则跳过
 
+  // 先清空再插入，保证数据库与 seed.json 完全一致
+  sqlite.prepare('DELETE FROM Registration').run()
+  sqlite.prepare('DELETE FROM Event').run()
+  sqlite.prepare('DELETE FROM Article').run()
+  sqlite.prepare('DELETE FROM Partner').run()
+
   // 活动
   if (seed.events) {
-    const insertEvent = sqlite.prepare('INSERT OR IGNORE INTO Event (id, title, summary, content, coverImage, startDate, endDate, location, maxParticipants, registrationDeadline, status, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')
+    const insertEvent = sqlite.prepare('INSERT INTO Event (id, title, summary, content, coverImage, startDate, endDate, location, maxParticipants, registrationDeadline, status, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')
     for (const e of seed.events) {
       insertEvent.run(uid(), e.title, e.summary, e.content || '', e.coverImage || '', e.startDate, e.endDate, e.location, e.maxParticipants || null, e.registrationDeadline || null, e.status || 'published', now, now)
     }
@@ -101,7 +107,7 @@ function maybeSeed() {
 
   // 文章
   if (seed.articles) {
-    const insertArticle = sqlite.prepare('INSERT OR IGNORE INTO Article (id, title, summary, link, coverImage, status, publishedAt, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?)')
+    const insertArticle = sqlite.prepare('INSERT INTO Article (id, title, summary, link, coverImage, status, publishedAt, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?)')
     for (const a of seed.articles) {
       insertArticle.run(uid(), a.title, a.summary, a.link, a.coverImage || '', a.status || 'published', a.publishedAt || null, now, now)
     }
@@ -109,7 +115,7 @@ function maybeSeed() {
 
   // 合作伙伴
   if (seed.partners) {
-    const insertPartner = sqlite.prepare('INSERT OR IGNORE INTO Partner (id, name, logoUrl, link, category, sortOrder, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?)')
+    const insertPartner = sqlite.prepare('INSERT INTO Partner (id, name, logoUrl, link, category, sortOrder, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?)')
     for (const p of seed.partners) {
       insertPartner.run(uid(), p.name, p.logoUrl || '', p.link || '', p.category || 'COMMUNITY', p.sortOrder || 0, now, now)
     }
