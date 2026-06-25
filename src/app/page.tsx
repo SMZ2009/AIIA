@@ -78,9 +78,9 @@ export default async function HomePage() {
                     {items.map((p) => (
                       <div key={p.id} className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
                         {p.logoUrl ? (
-                          <img src={p.logoUrl} alt={p.name} className="h-4 object-contain opacity-50 hover:opacity-80 transition-opacity" />
+                          <img src={p.logoUrl} alt={p.name} className="h-4 object-contain opacity-70 hover:opacity-100 transition-opacity" />
                         ) : (
-                          <span className="text-[11px] text-white/60">{p.name}</span>
+                          <span className="text-[11px] text-white/80">{p.name}</span>
                         )}
                       </div>
                     ))}

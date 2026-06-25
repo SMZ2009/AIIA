@@ -1,4 +1,5 @@
 import { formatDate } from '@/lib/utils'
+import Image from 'next/image'
 
 interface ArticleCardProps {
   title: string; summary: string; link: string; coverImage: string
@@ -15,11 +16,12 @@ export function ArticleCard({ title, summary, link, coverImage, publishedAt }: A
     >
       {coverImage && (
         <div className="relative w-full aspect-[2/1] overflow-hidden">
-          <img
+          <Image
             src={coverImage}
             alt={title}
-            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.01]"
-            loading="lazy"
+            fill
+            sizes="(max-width: 768px) 100vw, 400px"
+            className="object-cover transition-transform duration-1000 group-hover:scale-[1.01]"
           />
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
         </div>

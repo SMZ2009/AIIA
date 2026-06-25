@@ -31,7 +31,7 @@ export default function AboutPage() {
             <Target className="w-4 h-4 text-indigo-400" />
           </div>
           <h3 className="text-base font-bold text-white mb-1.5">我们的使命</h3>
-          <p className="text-sm text-slate-400 leading-relaxed">搭建跨学科、开放性的人工智能交流与创新实践平台，聚焦AI技术落地应用、互联网全栈技术开发、产品设计与市场创新，融合技术学习、实战开发、产品孵化、商业思维、校企资源对接、校际交流等内容，助力成员全面成长。</p>
+          <p className="text-sm text-slate-400 leading-relaxed">搭建跨学科、开放性的人工智能交流与创新实践平台，聚焦AI落地创新应用、互联网全栈开发、产品设计与市场推广，融合技术与商业思维学习、产品开发比赛活动、校企资源对接共建、校际交流等内容，助力成员全面成长</p>
         </div>
 
         <div className="glass-card p-5">
@@ -40,11 +40,8 @@ export default function AboutPage() {
           </div>
           <h3 className="text-base font-bold text-white mb-1.5">组织架构</h3>
           <ul className="text-sm text-slate-400 space-y-1 leading-relaxed">
-            <li>· <strong className="text-white">社长团</strong> — 整体规划与对外联络</li>
-            <li>· <strong className="text-white">技术部</strong> — 技术培训、项目开发</li>
-            <li>· <strong className="text-white">活动部</strong> — 活动策划与执行</li>
-            <li>· <strong className="text-white">宣传部</strong> — 品牌推广与新媒体</li>
-            <li>· <strong className="text-white">外联部</strong> — 校内外合作对接</li>
+            初始阶段由 <strong className="text-white">协会筹备委员会</strong> 统筹事项
+            后计划构建理事会，下设秘书部、共学部、外联部、宣传部
           </ul>
         </div>
 

@@ -40,7 +40,7 @@ function SortableCard({ p, onEdit, onDelete, deleting }: {
       className="flex items-center gap-3 bg-[#0a0e1a] border border-white/[0.06] rounded-xl px-4 py-3 hover:border-white/[0.10] transition-all group"
     >
       <button type="button" {...attributes} {...listeners}
-        className="cursor-grab active:cursor-grabbing touch-none p-1 -ml-1 opacity-30 group-hover:opacity-100 transition-opacity">
+        className="cursor-grab active:cursor-grabbing touch-none p-1 -ml-1 opacity-50 group-hover:opacity-100 transition-opacity">
         <GripVertical className="w-4 h-4 text-slate-500" />
       </button>
 
@@ -48,7 +48,7 @@ function SortableCard({ p, onEdit, onDelete, deleting }: {
         {p.logoUrl ? (
           <img src={p.logoUrl} alt={p.name} className="w-full h-full object-contain p-1.5" />
         ) : (
-          <span className="text-base font-bold text-slate-600">{p.name?.[0] || '?'}</span>
+          <span className="text-base font-bold text-slate-400">{p.name?.[0] || '?'}</span>
         )}
       </div>
 
@@ -56,7 +56,7 @@ function SortableCard({ p, onEdit, onDelete, deleting }: {
         <p className="text-sm text-white font-medium truncate">{p.name}</p>
         {p.link && (
           <a href={p.link} target="_blank" rel="noopener noreferrer"
-            className="text-[11px] text-slate-600 hover:text-indigo-400 truncate block transition-colors">
+            className="text-[11px] text-slate-500 hover:text-indigo-400 truncate block transition-colors">
             {p.link.replace(/^https?:\/\//, '')}
           </a>
         )}
@@ -71,7 +71,7 @@ function SortableCard({ p, onEdit, onDelete, deleting }: {
         编辑
       </button>
       <button onClick={onDelete} disabled={deleting}
-        className="p-1.5 rounded-lg hover:bg-red-500/10 text-slate-600 hover:text-red-400 transition-colors shrink-0">
+        className="p-1.5 rounded-lg hover:bg-red-500/10 text-slate-500 hover:text-red-400 transition-colors shrink-0">
         <Trash2 className="w-3.5 h-3.5" />
       </button>
     </div>
@@ -96,7 +96,7 @@ function CategorySection({ cat, items, onEdit, onDelete, deleting, onDragEnd }: 
         <div className={`w-2 h-2 rounded-full ${cat.dot}`} />
         <Icon className="w-3.5 h-3.5 text-slate-500" />
         <h3 className="text-sm font-semibold text-slate-300">{cat.label}</h3>
-        <span className="text-[11px] text-slate-600 ml-1">{items.length}</span>
+        <span className="text-[11px] text-slate-400 ml-1">{items.length}</span>
       </div>
 
       {items.length === 0 ? (
@@ -224,7 +224,7 @@ export function PartnersClient({ partners: initial }: { partners: any[] }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <p className="text-xs text-slate-600">拖拽手柄调整排序，仅同组内有效</p>
+        <p className="text-xs text-slate-500">拖拽手柄调整排序，仅同组内有效</p>
         <Button size="sm" onClick={openNew}>
           <Plus className="w-4 h-4 mr-1" />添加伙伴
         </Button>

@@ -1,4 +1,4 @@
-import { Users, Info, ChevronRight } from 'lucide-react'
+import { Info, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
@@ -6,7 +6,6 @@ export const metadata: Metadata = { title: '更多' }
 
 const menuItems = [
   { icon: Info, label: '关于我们', href: '/about', color: 'text-indigo-400 bg-indigo-500/10' },
-  { icon: Users, label: '成员介绍', href: '/members', color: 'text-cyan-400 bg-cyan-500/10' },
 ]
 
 export default function MorePage() {
