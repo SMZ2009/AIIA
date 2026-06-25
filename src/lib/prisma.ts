@@ -1,22 +1,43 @@
 // Prisma 兼容层 — 底层使用 better-sqlite3，API 与 @prisma/client 一致
 import { prisma as db } from './db'
-import type { PartnerRow, EventRow, ArticleRow, UserRow, RegistrationRow } from './db'
 
-/** 泛型模型接口 — 模拟 Prisma 生成的类型，消除索引签名 */
-interface Model<T> {
-  findMany(opts?: any): T[]
-  findUnique?(opts: { where: { id: string }; include?: any }): T | null
-  findFirst?(opts: { where: any }): T | null
-  create(opts: { data: any }): T
-  update(opts: { where: { id: string }; data: any }): T
-  delete(opts: { where: { id: string } }): T
-  count(opts?: any): number
-}
-
+/**
+ * 类型适配：
+ * - findMany 返回 any[]（而非 any），确保 .map((e) => <Comp {...e} />) 中
+ *   e 的类型被正确推断（从 Array<any> 推断为 any，不触发 noImplicitAny）
+ * - 其他方法返回 any，兼容所有消费方
+ */
 export const prisma = db as unknown as {
-  partner: Model<PartnerRow>
-  event: Model<EventRow>
-  article: Model<ArticleRow>
-  user: { findUnique(opts: { where: { username: string } }): UserRow | null }
-  registration: Model<RegistrationRow>
+  partner: {
+    findMany(opts?: any): any[]
+    create(opts: { data: any }): any
+    update(opts: { where: { id: string }; data: any }): any
+    delete(opts: { where: { id: string } }): any
+  }
+  event: {
+    findMany(opts?: any): any[]
+    findUnique(opts: any): any
+    create(opts: { data: any }): any
+    update(opts: { where: { id: string }; data: any }): any
+    delete(opts: { where: { id: string } }): any
+    count(opts?: any): number
+  }
+  article: {
+    findMany(opts?: any): any[]
+    findUnique(opts: { where: { id: string } }): any
+    findFirst(opts: { where: any }): any
+    create(opts: { data: any }): any
+    update(opts: { where: { id: string }; data: any }): any
+    delete(opts: { where: { id: string } }): any
+    count(opts?: any): number
+  }
+  user: {
+    findUnique(opts: { where: { username: string } }): any
+  }
+  registration: {
+    findMany(opts?: any): any[]
+    count(opts?: any): number
+    create(opts: { data: any }): any
+    update(opts: { where: { id: string }; data: any }): any
+  }
 }

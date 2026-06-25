@@ -6,6 +6,7 @@ const DB_PATH = path.join(process.cwd(), 'prisma', 'dev.db')
 const sqlite = new Database(DB_PATH)
 sqlite.pragma('journal_mode = WAL')
 sqlite.pragma('foreign_keys = ON')
+sqlite.pragma('busy_timeout = 10000')
 
 // ── 建表 ──────────────────────────────────────────────
 sqlite.exec(`
@@ -226,7 +227,7 @@ function colNames(table: string): string[] {
 function runInsert(table: string, data: Row): Row {
   const now = new Date().toISOString()
   const id = (data.id as string) || crypto.randomUUID()
-  const payload = { ...data, id, createdAt: now, updatedAt: now }
+  const payload: Record<string, any> = { ...data, id, createdAt: now, updatedAt: now }
   const keys = Object.keys(payload)
   const vals = keys.map(k => payload[k] instanceof Date ? (payload[k] as Date).toISOString() : payload[k])
   const placeholders = keys.map(() => '?').join(', ')
@@ -255,7 +256,7 @@ export const prisma = {
     },
     update({ where: { id }, data }: { where: { id: string }; data: Row }) {
       const now = new Date().toISOString()
-      const setData = { ...data, updatedAt: now }
+      const setData: Record<string, any> = { ...data, updatedAt: now }
       const setClauses = Object.keys(setData).map(k => `"${k}" = ?`).join(', ')
       const vals = Object.values(setData).map(v => v instanceof Date ? (v as Date).toISOString() : v)
       sqlite.prepare(`UPDATE Partner SET ${setClauses} WHERE id = ?`).run(...vals, id)
@@ -308,7 +309,7 @@ export const prisma = {
     },
     update({ where: { id }, data }: { where: { id: string }; data: Row }) {
       const now = new Date().toISOString()
-      const setData = { ...data, updatedAt: now }
+      const setData: Record<string, any> = { ...data, updatedAt: now }
       const setClauses = Object.keys(setData).map(k => `"${k}" = ?`).join(', ')
       const vals = Object.values(setData).map(v => v instanceof Date ? (v as Date).toISOString() : v)
       sqlite.prepare(`UPDATE Event SET ${setClauses} WHERE id = ?`).run(...vals, id)
@@ -353,7 +354,7 @@ export const prisma = {
     },
     update({ where: { id }, data }: { where: { id: string }; data: Row }) {
       const now = new Date().toISOString()
-      const setData = { ...data, updatedAt: now }
+      const setData: Record<string, any> = { ...data, updatedAt: now }
       const setClauses = Object.keys(setData).map(k => `"${k}" = ?`).join(', ')
       const vals = Object.values(setData).map(v => v instanceof Date ? (v as Date).toISOString() : v)
       sqlite.prepare(`UPDATE Article SET ${setClauses} WHERE id = ?`).run(...vals, id)
