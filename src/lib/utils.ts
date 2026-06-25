@@ -25,12 +25,33 @@ export function formatDate(date: unknown, format: 'short' | 'long' | 'datetime' 
   return `${m}-${day}`
 }
 
-export function formatDateRange(start: unknown, end: unknown): string {
+export function formatDateRange(start: unknown, end: unknown, format: 'short' | 'long' | 'datetime' = 'short'): string {
   const s = toDate(start)
   const e = toDate(end)
   if (!s || !e) return '--'
-  const sStr = formatDate(s, 'short')
-  const eStr = formatDate(e, 'short')
+
+  if (format === 'datetime') {
+    const y = s.getFullYear()
+    const sm = String(s.getMonth() + 1).padStart(2, '0')
+    const sd = String(s.getDate()).padStart(2, '0')
+    const sh = String(s.getHours()).padStart(2, '0')
+    const smin = String(s.getMinutes()).padStart(2, '0')
+    const eh = String(e.getHours()).padStart(2, '0')
+    const emin = String(e.getMinutes()).padStart(2, '0')
+
+    // 同一天：2026-06-22 09:30-19:00
+    if (s.getFullYear() === e.getFullYear() && s.getMonth() === e.getMonth() && s.getDate() === e.getDate()) {
+      return `${y}-${sm}-${sd} ${sh}:${smin}-${eh}:${emin}`
+    }
+    // 跨天：2026-06-22 09:30 - 2026-06-23 19:00
+    const ey = e.getFullYear()
+    const em = String(e.getMonth() + 1).padStart(2, '0')
+    const ed = String(e.getDate()).padStart(2, '0')
+    return `${y}-${sm}-${sd} ${sh}:${smin} - ${ey}-${em}-${ed} ${eh}:${emin}`
+  }
+
+  const sStr = formatDate(s, format)
+  const eStr = formatDate(e, format)
   if (sStr === eStr) return sStr
   return `${sStr} - ${eStr}`
 }

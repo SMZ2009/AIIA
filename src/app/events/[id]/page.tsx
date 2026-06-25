@@ -56,9 +56,11 @@ export default async function EventDetailPage({ params }: Props) {
         <div className="glass-card p-5">
           <h1 className="text-lg font-extrabold text-white mb-4 leading-snug">{event.title}</h1>
           <div className="space-y-2">
-            <Row icon={Calendar} text={formatDateRange(event.startDate, event.endDate)} />
+            <Row icon={Calendar} text={formatDateRange(event.startDate, event.endDate, 'datetime')} />
             <Row icon={MapPin} text={event.location} />
-            <Row icon={Users} text={`已报名 ${event._count.registrations}${event.maxParticipants ? ` / ${event.maxParticipants} 人` : ''}`} extra={isFull ? <span className="text-red-400 text-xs">（已满）</span> : undefined} />
+            {event.maxParticipants && (
+              <Row icon={Users} text={`限额${event.maxParticipants}人`} extra={isFull ? <span className="text-red-400 text-xs">（已满）</span> : undefined} />
+            )}
             {event.registrationDeadline && (
               <Row icon={Clock} text={`报名截止 ${formatDate(event.registrationDeadline, 'datetime')}`} extra={deadlinePassed ? <span className="text-red-400 text-xs">（已截止）</span> : undefined} />
             )}
