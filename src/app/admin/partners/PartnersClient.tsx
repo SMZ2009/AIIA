@@ -1,12 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useToast } from '@/components/ui/Toast'
 import { useForm } from 'react-hook-form'
-import { Plus, Trash2, X } from 'lucide-react'
+import { Plus, Trash2, X, GripVertical, Upload, ImagePlus } from 'lucide-react'
+import {
+  DndContext, closestCenter, PointerSensor, useSensor, useSensors, DragEndEvent,
+} from '@dnd-kit/core'
+import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 const CATEGORIES = [
   { value: 'ENTERPRISE', label: '企业伙伴' },
@@ -14,12 +19,56 @@ const CATEGORIES = [
   { value: 'COMMUNITY', label: '社区伙伴' },
 ]
 
-const categoryColor: Record<string, string> = {
-  ENTERPRISE: 'bg-blue-500/10 text-blue-400',
-  UNIVERSITY: 'bg-amber-500/10 text-amber-400',
-  COMMUNITY: 'bg-emerald-500/10 text-emerald-400',
+const categoryClass: Record<string, string> = {
+  ENTERPRISE: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  UNIVERSITY: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  COMMUNITY: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
 }
 
+// ── 可拖拽的卡片 ──────────────────────────────
+function SortableCard({ p, onEdit, onDelete, deleting }: { p: any; onEdit: () => void; onDelete: () => void; deleting: boolean }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: p.id })
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 50 : undefined,
+  }
+
+  return (
+    <div ref={setNodeRef} style={style} className="flex items-center gap-3 bg-[#0a0e1a] border border-white/[0.06] rounded-xl px-4 py-3 hover:border-white/[0.10] transition-colors">
+      <button type="button" {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing touch-none p-1 -ml-1">
+        <GripVertical className="w-4 h-4 text-slate-600 hover:text-slate-400" />
+      </button>
+
+      <div className="w-10 h-10 rounded-lg bg-[#111827] flex items-center justify-center shrink-0 overflow-hidden">
+        {p.logoUrl ? (
+          <img src={p.logoUrl} alt={p.name} className="w-full h-full object-contain" />
+        ) : (
+          <span className="text-sm font-bold text-slate-600">{p.name?.[0]}</span>
+        )}
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <p className="text-sm text-white font-medium truncate">{p.name}</p>
+        {p.link && <p className="text-[11px] text-slate-600 truncate">{p.link}</p>}
+      </div>
+
+      <span className={`text-[10px] px-2 py-0.5 rounded-full border ${categoryClass[p.category] || categoryClass.COMMUNITY}`}>
+        {CATEGORIES.find(c => c.value === p.category)?.label || p.category}
+      </span>
+
+      <div className="flex gap-1">
+        <Button variant="ghost" size="sm" onClick={onEdit}>编辑</Button>
+        <Button variant="ghost" size="sm" loading={deleting} onClick={onDelete}>
+          <Trash2 className="w-3.5 h-3.5 text-red-400" />
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+// ── 主组件 ──────────────────────────────────────
 export function PartnersClient({ partners: initial }: { partners: any[] }) {
   const router = useRouter()
   const { toast } = useToast()
@@ -28,10 +77,14 @@ export function PartnersClient({ partners: initial }: { partners: any[] }) {
   const [showForm, setShowForm] = useState(false)
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
 
   const { register, handleSubmit, reset, setValue, watch } = useForm({
     defaultValues: { name: '', logoUrl: '', link: '', category: 'COMMUNITY', sortOrder: 0 },
   })
+
+  const logoUrl = watch('logoUrl')
 
   const openNew = () => {
     reset({ name: '', logoUrl: '', link: '', category: 'COMMUNITY', sortOrder: 0 })
@@ -40,7 +93,7 @@ export function PartnersClient({ partners: initial }: { partners: any[] }) {
   }
 
   const openEdit = (p: any) => {
-    reset({ name: p.name, logoUrl: p.logoUrl, link: p.link, category: p.category, sortOrder: p.sortOrder })
+    reset({ name: p.name, logoUrl: p.logoUrl || '', link: p.link || '', category: p.category, sortOrder: p.sortOrder })
     setEditing(p)
     setShowForm(true)
   }
@@ -71,57 +124,68 @@ export function PartnersClient({ partners: initial }: { partners: any[] }) {
     finally { setDeleting(null) }
   }
 
-  // Group by category
-  const grouped: Record<string, any[]> = {}
-  for (const c of CATEGORIES) grouped[c.value] = partners.filter((p) => p.category === c.value)
+  // ── 拖拽排序 ──────────────────────────────
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }))
+
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+    setPartners((prev) => {
+      const oldIdx = prev.findIndex((p) => p.id === active.id)
+      const newIdx = prev.findIndex((p) => p.id === over.id)
+      const reordered = arrayMove(prev, oldIdx, newIdx)
+      // 批量更新 sortOrder
+      const updates = reordered.map((p, i) => ({ id: p.id, sortOrder: i }))
+      fetch('/api/partners/reorder', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updates) }).catch(() => {})
+      return reordered
+    })
+  }, [])
+
+  // ── Logo 上传 ──────────────────────────────
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.size > 5 * 1024 * 1024) { toast('error', '图片不能超过 5MB'); return }
+    setUploading(true)
+    try {
+      const form = new FormData()
+      form.append('file', file)
+      const res = await fetch('/api/upload', { method: 'POST', body: form })
+      if (!res.ok) throw new Error()
+      const { url } = await res.json()
+      setValue('logoUrl', url)
+      toast('success', 'Logo 上传成功')
+    } catch { toast('error', '上传失败') }
+    finally { setUploading(false); if (fileRef.current) fileRef.current.value = '' }
+  }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-end">
+    <div className="space-y-5">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-xs text-slate-500">拖拽左侧手柄可调整排序</p>
+        </div>
         <Button size="sm" onClick={openNew}><Plus className="w-4 h-4 mr-1" />添加伙伴</Button>
       </div>
 
-      {/* Category sections */}
-      {CATEGORIES.map((cat) => (
-        <div key={cat.value}>
-          <h2 className="text-sm font-semibold text-slate-400 mb-3 flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full ${cat.value === 'ENTERPRISE' ? 'bg-blue-400' : cat.value === 'UNIVERSITY' ? 'bg-amber-400' : 'bg-emerald-400'}`} />
-            {cat.label}
-            <span className="text-slate-600 text-xs ml-1">({grouped[cat.value].length})</span>
-          </h2>
-          {grouped[cat.value].length === 0 ? (
-            <p className="text-xs text-slate-600 py-4">暂无</p>
-          ) : (
-            <div className="space-y-2">
-              {grouped[cat.value].map((p) => (
-                <div key={p.id} className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3">
-                  <div className="w-10 h-10 rounded-lg bg-white/[0.04] flex items-center justify-center shrink-0">
-                    {p.logoUrl ? <img src={p.logoUrl} alt={p.name} className="w-6 h-6 object-contain opacity-70" /> : <span className="text-sm font-bold text-slate-500">{p.name[0]}</span>}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-slate-200 font-medium truncate">{p.name}</p>
-                    {p.link && <p className="text-[11px] text-slate-600 truncate">{p.link}</p>}
-                  </div>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full ${categoryColor[p.category]}`}>{cat.label}</span>
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="sm" onClick={() => openEdit(p)}>编辑</Button>
-                    <Button variant="ghost" size="sm" loading={deleting === p.id} onClick={() => handleDelete(p.id)}>
-                      <Trash2 className="w-3.5 h-3.5 text-red-400" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
+      {/* 可拖拽列表 */}
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={partners.map(p => p.id)} strategy={verticalListSortingStrategy}>
+          <div className="space-y-2">
+            {partners.length === 0 && <p className="text-sm text-slate-600 py-8 text-center">暂无合作伙伴，点击右上角添加</p>}
+            {partners.map((p) => (
+              <SortableCard key={p.id} p={p} onEdit={() => openEdit(p)} onDelete={() => handleDelete(p.id)} deleting={deleting === p.id} />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
 
       {/* Form Modal */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowForm(false)} />
-          <form onSubmit={handleSubmit(onSubmit)} className="relative bg-[#111827] w-full max-w-lg rounded-t-3xl md:rounded-2xl p-6 animate-slide-up max-h-[85vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-4">
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setShowForm(false)} />
+          <form onSubmit={handleSubmit(onSubmit)} className="relative bg-[#0a0e1a] w-full max-w-lg rounded-t-3xl md:rounded-2xl p-6 animate-slide-up max-h-[85vh] overflow-y-auto border border-white/[0.08]">
+            <div className="flex items-center justify-between mb-5">
               <h3 className="text-lg font-bold text-white">{editing ? '编辑伙伴' : '添加伙伴'}</h3>
               <button type="button" onClick={() => setShowForm(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/[0.06]">
                 <X className="w-4 h-4 text-slate-400" />
@@ -130,14 +194,32 @@ export function PartnersClient({ partners: initial }: { partners: any[] }) {
 
             <div className="space-y-4">
               <Input label="名称 *" {...register('name', { required: true })} />
-              <Input label="Logo URL" {...register('logoUrl')} placeholder="https://..." />
+
+              {/* Logo 上传 */}
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">Logo</label>
+                {logoUrl ? (
+                  <div className="relative inline-block">
+                    <img src={logoUrl} alt="Logo" className="w-20 h-20 rounded-xl object-contain bg-[#111827] border border-white/[0.08]" />
+                    <button type="button" onClick={() => setValue('logoUrl', '')} className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center text-xs">×</button>
+                  </div>
+                ) : (
+                  <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading} className="w-full h-20 rounded-xl border-2 border-dashed border-white/[0.08] hover:border-indigo-500/40 flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-indigo-400 transition-colors">
+                    {uploading ? <span className="text-sm">上传中...</span> : <><Upload className="w-5 h-5" /><span className="text-xs">点击上传 Logo</span></>}
+                  </button>
+                )}
+                <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+              </div>
+
               <Input label="网站链接" {...register('link')} placeholder="https://..." />
+
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">分类</label>
-                <select {...register('category')} className="w-full h-11 px-4 rounded-xl bg-white/[0.04] border border-white/[0.08] text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30">
+                <select {...register('category')} className="w-full h-11 px-4 rounded-xl bg-[#111827] border border-white/[0.08] text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30">
                   {CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
                 </select>
               </div>
+
               <Input label="排序" type="number" {...register('sortOrder', { valueAsNumber: true })} placeholder="数字越小越靠前" />
 
               <div className="flex gap-3 pt-2">
