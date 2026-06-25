@@ -51,7 +51,7 @@ export default async function EventDetailPage({ params }: Props) {
         )}
       </div>
 
-      <div className="px-5 -mt-5 relative z-10 space-y-4">
+      <div className="px-5 mt-4 space-y-4">
         {/* 信息卡片 */}
         <div className="glass-card p-5">
           <h1 className="text-lg font-extrabold text-white mb-4 leading-snug">{event.title}</h1>
