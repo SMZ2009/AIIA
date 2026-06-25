@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
       location: data.location,
       maxParticipants: data.maxParticipants || null,
       registrationDeadline: data.registrationDeadline ? new Date(data.registrationDeadline) : null,
+      registrationLink: data.registrationLink || '',
       status: data.status || 'draft',
     },
   })

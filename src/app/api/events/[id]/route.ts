@@ -38,6 +38,7 @@ export async function PUT(
       ...(data.location !== undefined && { location: data.location }),
       ...(data.maxParticipants !== undefined && { maxParticipants: data.maxParticipants }),
       ...(data.registrationDeadline !== undefined && { registrationDeadline: data.registrationDeadline ? new Date(data.registrationDeadline) : null }),
+      ...(data.registrationLink !== undefined && { registrationLink: data.registrationLink }),
       ...(data.status && { status: data.status }),
     },
   })

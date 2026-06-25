@@ -13,10 +13,11 @@ export async function POST() {
 
     const data = {
       events: events.map((e: any) => ({
-        title: e.title, summary: e.summary, content: e.content || '',
+        title: e.title, summary: e.summary || '', content: e.content || '',
         coverImage: e.coverImage || '', startDate: dateStr(e.startDate), endDate: dateStr(e.endDate),
         location: e.location, maxParticipants: e.maxParticipants,
-        registrationDeadline: dateStr(e.registrationDeadline), status: e.status,
+        registrationDeadline: dateStr(e.registrationDeadline), registrationLink: e.registrationLink || '',
+        status: e.status,
       })),
       articles: articles.map((a: any) => ({
         title: a.title, summary: a.summary, link: a.link,

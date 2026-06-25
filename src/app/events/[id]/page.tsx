@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import { formatDate, formatDateRange } from '@/lib/utils'
-import { Calendar, MapPin, Users, Clock, ArrowLeft } from 'lucide-react'
+import { Calendar, MapPin, Users, Clock, ArrowLeft, ExternalLink } from 'lucide-react'
 import { RegistrationForm } from '@/components/events/RegistrationForm'
 import Link from 'next/link'
 import type { Metadata } from 'next'
@@ -66,12 +66,37 @@ export default async function EventDetailPage({ params }: Props) {
         </div>
 
         {/* 正文 */}
-        <div className="glass-card p-5">
-          <div className="prose-dark" dangerouslySetInnerHTML={{ __html: renderMarkdown(event.content) }} />
-        </div>
-      </div>
+        {event.content && (
+          <div className="glass-card p-5">
+            <div className="prose-dark" dangerouslySetInnerHTML={{ __html: renderMarkdown(event.content) }} />
+          </div>
+        )}
 
-      {canRegister && <RegistrationForm eventId={event.id} eventTitle={event.title} />}
+        {/* 报名链接 */}
+        {event.registrationLink && (
+          <div className="glass-card p-5 text-center">
+            <h3 className="text-sm font-bold text-white mb-4">报名入口</h3>
+            <a href={event.registrationLink} target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/30 transition-colors text-sm font-medium">
+              <ExternalLink className="w-4 h-4" />打开报名链接
+            </a>
+            {/* QR 码 */}
+            <div className="mt-4">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(event.registrationLink)}`}
+                alt="报名二维码"
+                className="w-[180px] h-[180px] mx-auto rounded-xl bg-white p-2"
+              />
+              <p className="text-xs text-slate-600 mt-2">扫码报名</p>
+            </div>
+          </div>
+        )}
+
+        {/* 报名表单 */}
+        {canRegister && !event.registrationLink && (
+          <RegistrationForm eventId={event.id} eventTitle={event.title} />
+        )}
+      </div>
     </div>
   )
 }

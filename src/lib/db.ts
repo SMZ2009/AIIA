@@ -21,7 +21,7 @@ sqlite.exec(`
   CREATE TABLE IF NOT EXISTS Event (
     id TEXT PRIMARY KEY,
     title TEXT NOT NULL,
-    summary TEXT NOT NULL,
+    summary TEXT NOT NULL DEFAULT '',
     content TEXT NOT NULL DEFAULT '',
     coverImage TEXT NOT NULL DEFAULT '',
     startDate TEXT NOT NULL,
@@ -29,6 +29,7 @@ sqlite.exec(`
     location TEXT NOT NULL,
     maxParticipants INTEGER,
     registrationDeadline TEXT,
+    registrationLink TEXT NOT NULL DEFAULT '',
     status TEXT NOT NULL DEFAULT 'draft',
     createdAt TEXT NOT NULL,
     updatedAt TEXT NOT NULL
@@ -90,8 +91,8 @@ function ensureBoot() {
   try { seed = JSON.parse(fs.readFileSync(seedPath, 'utf-8')) } catch { return }
 
   if (seed.events) {
-    const stmt = sqlite.prepare('INSERT OR IGNORE INTO Event (id, title, summary, content, coverImage, startDate, endDate, location, maxParticipants, registrationDeadline, status, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')
-    for (const e of seed.events) stmt.run(uid(), e.title, e.summary, e.content || '', e.coverImage || '', e.startDate, e.endDate, e.location, e.maxParticipants || null, e.registrationDeadline || null, e.status || 'published', now, now)
+    const stmt = sqlite.prepare('INSERT OR IGNORE INTO Event (id, title, summary, content, coverImage, startDate, endDate, location, maxParticipants, registrationDeadline, registrationLink, status, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
+    for (const e of seed.events) stmt.run(uid(), e.title, e.summary || '', e.content || '', e.coverImage || '', e.startDate, e.endDate, e.location, e.maxParticipants || null, e.registrationDeadline || null, e.registrationLink || '', e.status || 'published', now, now)
   }
   if (seed.articles) {
     const stmt = sqlite.prepare('INSERT OR IGNORE INTO Article (id, title, summary, link, coverImage, status, publishedAt, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?,?,?)')
@@ -115,7 +116,7 @@ type Row = Record<string, any>
 
 // ── 模型接口（用来替代 Prisma 生成的类型）────────────
 export interface PartnerRow { id: string; name: string; logoUrl: string; link: string; category: string; sortOrder: number; createdAt: Date; updatedAt: Date }
-export interface EventRow { id: string; title: string; summary: string; content: string; coverImage: string; startDate: Date; endDate: Date; location: string; maxParticipants: number | null; registrationDeadline: Date | null; status: string; createdAt: Date; updatedAt: Date; _count?: { registrations: number } }
+export interface EventRow { id: string; title: string; summary: string; content: string; coverImage: string; startDate: Date; endDate: Date; location: string; maxParticipants: number | null; registrationDeadline: Date | null; registrationLink: string; status: string; createdAt: Date; updatedAt: Date; _count?: { registrations: number } }
 export interface ArticleRow { id: string; title: string; summary: string; link: string; coverImage: string; status: string; publishedAt: Date | null; createdAt: Date; updatedAt: Date }
 export interface UserRow { id: string; username: string; passwordHash: string; displayName: string }
 export interface RegistrationRow { id: string; eventId: string; name: string; studentId: string; phone: string; email: string; notes: string; status: string; createdAt: Date; event?: { title: string } | null }
