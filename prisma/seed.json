@@ -1,5 +1,32 @@
 {
-  "events": [],
+  "events": [
+    {
+      "title": "抖音造世界专场",
+      "summary": "",
+      "content": "",
+      "coverImage": "/uploads/4f039687-bf81-4ce8-8a36-d1b93e612dfe.jpg",
+      "startDate": "2026-06-22T09:30:00.000Z",
+      "endDate": "2026-06-22T19:00:00.000Z",
+      "location": "北京大学汇丰商学院401教室",
+      "maxParticipants": null,
+      "registrationDeadline": "2026-06-21T23:59:00.000Z",
+      "registrationLink": "",
+      "status": "published"
+    },
+    {
+      "title": "Physical AI Hackathon 2026 Meetup",
+      "summary": "",
+      "content": "",
+      "coverImage": "/uploads/0679b0d68745be313e356d9325f2ab69.jpg",
+      "startDate": "2026-06-27T14:30:00.000Z",
+      "endDate": "2026-06-27T17:30:00.000Z",
+      "location": "南头古城Z·Pilot黑科技旗舰店二楼",
+      "maxParticipants": null,
+      "registrationDeadline": "2026-06-27T14:00:00.000Z",
+      "registrationLink": "https://docs.qq.com/form/page/DYmptSG1jWVJwdEJZ",
+      "status": "published"
+    }
+  ],
   "articles": [
     {
       "title": "抖音AI创变者计划2026丨抖音造世界专场",
