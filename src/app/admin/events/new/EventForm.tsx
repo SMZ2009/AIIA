@@ -130,6 +130,16 @@ export default function EventForm({ defaultValues, isEdit, eventId }: EventFormP
           </button>
         )}
         <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+        {/* 手动输入 URL 备选 */}
+        <div className="mt-2">
+          <Input
+            placeholder="或输入图片 URL..."
+            {...register('coverImage')}
+            onChange={(e) => {
+              setValue('coverImage', e.target.value)
+            }}
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
