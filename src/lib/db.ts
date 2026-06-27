@@ -5,9 +5,14 @@ import fs from 'fs'
 // ── 数据库初始化 ────────────────────────────────────────
 const DB_PATH = path.join(process.cwd(), 'prisma', 'dev.db')
 const sqlite = new Database(DB_PATH)
-sqlite.pragma('journal_mode = WAL')
-sqlite.pragma('foreign_keys = ON')
-sqlite.pragma('busy_timeout = 10000')
+
+// 构建时跳过 PRAGMA（多 worker 并发会导致 SQLITE_BUSY）
+// WAL 模式已持久化在数据库文件中，构建时无需重复设置
+if (!process.env.NEXT_PHASE) {
+  sqlite.pragma('journal_mode = WAL')
+  sqlite.pragma('foreign_keys = ON')
+  sqlite.pragma('busy_timeout = 10000')
+}
 
 // ── 建表 ──────────────────────────────────────────────
 sqlite.exec(`
