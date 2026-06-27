@@ -1,0 +1,51 @@
+plugins {
+    id "com.android.application"
+}
+
+android {
+    namespace "com.hitsz.aiia.twa"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.hitsz.aiia.twa"
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+        manifestPlaceholders = [
+            hostName: "hitszaiia.onrender.com",
+            defaultUrl: "https://hitszaiia.onrender.com/?standalone=true",
+            launcherName: "AI创协"
+        ]
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("${System.getenv("KEYSTORE_FILE") ?: "debug.keystore"}")
+            storePassword System.getenv("KEYSTORE_PASSWORD") ?: "android"
+            keyAlias System.getenv("KEYSTORE_ALIAS") ?: "android"
+            keyPassword System.getenv("KEYSTORE_KEY_PASSWORD") ?: "android"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation "com.google.androidbrowserhelper:androidbrowserhelper:2.5.0"
+}

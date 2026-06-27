@@ -1,5 +1,5 @@
 // Service Worker for AIIA PWA
-const CACHE_NAME = 'aiia-v1';
+const CACHE_NAME = 'aiia-v2';
 const ASSETS = [
   '/',
   '/manifest.json',
@@ -31,6 +31,9 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   // Skip non-GET requests
   if (event.request.method !== 'GET') return;
+
+  // Skip .well-known paths (assetlinks.json, etc.)
+  if (event.request.url.includes('/.well-known/')) return;
 
   event.respondWith(
     fetch(event.request)
